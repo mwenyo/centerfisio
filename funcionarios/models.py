@@ -109,3 +109,38 @@ class Fisioterapeuta(models.Model):
             return "Dra. %s" % self.funcionario.full_name
 
         return "Dr. %s" % self.funcionario.full_name
+
+class Esteticista(models.Model):
+    """Model definition for Esteticista."""
+
+    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+    cursos = models.TextField(null=True, blank=True)
+
+    class Meta:
+        """Meta definition for Esteticista."""
+
+        verbose_name = 'Esteticista'
+        verbose_name_plural = 'Esteticistas'
+
+    def __str__(self):
+        """Unicode representation of Esteticista."""
+
+        return self.funcionario.full_name
+
+class Instrutor(models.Model):
+    """Model definition for Instrutor."""
+
+    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+    registro = models.CharField("CREFITO/CREF", max_length=50)
+    cursos = models.TextField(null=True, blank=True)
+
+    class Meta:
+        """Meta definition for Instrutor."""
+
+        verbose_name = 'Instrutor de Pilates'
+        verbose_name_plural = 'Instrutores de Pilates'
+
+    def __str__(self):
+        """Unicode representation of Instrutor de Pilates."""
+
+        return self.funcionario.full_name

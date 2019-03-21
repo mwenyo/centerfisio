@@ -289,7 +289,9 @@
 				<i class="fa-fw fa fa-home"></i>
 				Início
 				<span>>
-					Bem vindo {{ user.full_name }}!
+					Bem vindo {# if user is instaceof fisioterapeuta #}
+					{{ user.full_name }}!
+					{# else #}
 				</span>
 				{% endblock cabecalho %}
 			</h1>
