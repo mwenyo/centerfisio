@@ -42,7 +42,7 @@ class Funcionario(models.Model):
         ('Casado(a)', 'Casado(a)'),
         ('Divorciado(a)', 'Divorciado(a)'),
         ('Viúvo(a)', 'Viúvo(a)'),
-        ('Amancebado(a)', 'Amancebado(a)'),
+        ('União Estável', 'União Estável'),
     )
 
     GENERO_CHOICE = (
@@ -78,7 +78,7 @@ class Funcionario(models.Model):
         verbose_name_plural = 'Funcionários'
 
     @property
-    def full_name(self):
+    def nome_completo(self):
         """Retorna o nome completo do funcionário"""
 
         return "%s %s" % (self.usuario.first_name, self.usuario.last_name)
@@ -86,7 +86,7 @@ class Funcionario(models.Model):
     def __str__(self):
         """Retorna o texto contendo o nome completo"""
 
-        return self.full_name
+        return self.nome_completo
 
 class Fisioterapeuta(models.Model):
     """Model definition for Fisioterapeuta."""
@@ -106,9 +106,9 @@ class Fisioterapeuta(models.Model):
         """Unicode representation of Fisioterapeuta."""
 
         if self.funcionario.genero == "f":
-            return "Dra. %s" % self.funcionario.full_name
+            return "Dra. %s" % self.funcionario.nome_completo
 
-        return "Dr. %s" % self.funcionario.full_name
+        return "Dr. %s" % self.funcionario.nome_completo
 
 class Esteticista(models.Model):
     """Model definition for Esteticista."""
@@ -125,7 +125,7 @@ class Esteticista(models.Model):
     def __str__(self):
         """Unicode representation of Esteticista."""
 
-        return self.funcionario.full_name
+        return self.funcionario.nome_completo
 
 class Instrutor(models.Model):
     """Model definition for Instrutor."""
@@ -143,4 +143,4 @@ class Instrutor(models.Model):
     def __str__(self):
         """Unicode representation of Instrutor de Pilates."""
 
-        return self.funcionario.full_name
+        return self.funcionario.nome_completo
