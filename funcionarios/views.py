@@ -9,7 +9,7 @@ from .models import Funcionario, Fisioterapeuta
 @method_decorator(login_required, name='dispatch')
 class HomeView(TemplateView):
     """View da HomePage"""
-    template_name = "html/base.html"
+    template_name = "base.html"
 
     def get_context_data(self, **kwargs):
         """Coleta de dados do BD"""
