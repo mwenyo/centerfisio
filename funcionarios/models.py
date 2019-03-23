@@ -91,7 +91,7 @@ class Funcionario(models.Model):
 class Fisioterapeuta(models.Model):
     """Model definition for Fisioterapeuta."""
 
-    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+    funcionario = models.OneToOneField(Funcionario, on_delete=models.CASCADE)
     crefito = models.CharField("CREFITO", max_length=50)
     especializacao = models.TextField(null=True, blank=True)
     cursos = models.TextField(null=True, blank=True)
@@ -113,7 +113,7 @@ class Fisioterapeuta(models.Model):
 class Esteticista(models.Model):
     """Model definition for Esteticista."""
 
-    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+    funcionario = models.OneToOneField(Funcionario, on_delete=models.CASCADE)
     cursos = models.TextField(null=True, blank=True)
 
     class Meta:
@@ -130,7 +130,7 @@ class Esteticista(models.Model):
 class Instrutor(models.Model):
     """Model definition for Instrutor."""
 
-    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+    funcionario = models.OneToOneField(Funcionario, on_delete=models.CASCADE)
     registro = models.CharField("CREFITO/CREF", max_length=50)
     cursos = models.TextField(null=True, blank=True)
 

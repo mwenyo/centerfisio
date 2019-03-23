@@ -1,10 +1,10 @@
 """Endereçamento de Funcionários"""
 
 from django.urls import path
-from . import views
+from .views import HomeView
 
 app_name = 'funcionarios'
 
 urlpatterns = [
-    path('', views.home, name="pagina_inicial"),
+    path('', HomeView.as_view(), name="pagina_inicial"),
 ]

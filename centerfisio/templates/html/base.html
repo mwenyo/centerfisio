@@ -185,11 +185,19 @@
 				<!-- User image size is adjusted inside CSS, it should stay as is -->
 
 				<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-					<img src="{{ user.foto.url }}" alt="me" class="online" />
+					{% if fisioterapeuta %}
+					<img src="{{ fisioterapeuta.funcionario.foto.url }}" alt="me" class="online" />
 					<span>
-						{{ user.usuario.first_name }}
+						{{ fisioterapeuta.funcionario.usuario.first_name }}
 					</span>
 					<i class="fa fa-angle-down"></i>
+					{% else %}
+					<img src="{{ funcionario.foto.url }}" alt="me" class="online" />
+					<span>
+						{{ funcionario.usuario.first_name }}
+					</span>
+					<i class="fa fa-angle-down"></i>
+					{% endif %}
 				</a>
 
 			</span>
@@ -287,11 +295,20 @@
 				<!-- PAGE HEADER -->
 				{% block cabecalho %}
 				<i class="fa-fw fa fa-home"></i>
-				Início
-				<span>>
-					Bem vindo {# if user is instaceof fisioterapeuta #}
-					{{ user.nome_completo }}!
-					{# else #}
+				Início <span>> 
+				{% if fisioterapeuta %}
+					{% if fisioterapeuta.funcionario.genero != 'f' %}
+						Bem-vindo Dr. {{ fisioterapeuta.funcionario.usuario.first_name }}!
+					{% else %}
+						Bem-vinda Dra. {{ fisioterapeuta.funcionario.usuario.first_name }}!
+					{% endif %}
+				{% else %}
+					{% if funcionario.genero != 'f' %}
+						Bem-vindo {{ funcionario }}!
+					{% else %}
+						Bem-vinda {{ funcionario }}!
+					{% endif %}
+				{% endif %}
 				</span>
 				{% endblock cabecalho %}
 			</h1>
@@ -330,6 +347,10 @@
 				<a href="#" class="jarvismetro-tile big-cubes bg-color-yellow"> <span class="iconbox"> <i
 							class="fa fa-money fa-4x"></i> <span>Caixa</span> </span> </a>
 			</li>
+			<li>
+				<a href="#" class="jarvismetro-tile big-cubes bg-color-green"> <span class="iconbox"> <i
+							class="fa fa-archive fa-4x"></i> <span>Almoxarifado</span> </span> </a>
+			</li>
 		</ul>
 	</div>
 	<!-- END SHORTCUT AREA -->
@@ -358,6 +379,7 @@
 
 	<!-- MAIN APP JS FILE -->
 	<script src="{% static 'js/app.min.js' %}"></script>
+	{% block js_plugins %}{% endblock js_plugins %}
 </body>
 
 </html>
