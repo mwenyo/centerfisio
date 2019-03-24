@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block conteudo %}
+	
+    <!--
+        The ID "widget-grid" will start to initialize all widgets below 
+        You do not need to use widgets if you dont want to. Simply remove 
+        the <section></section> and you can use wells or panels instead 
+        -->
+    
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+    
+        <!-- row -->
+        <div class="row">
+            
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget" id="wid-id-0">
+                    <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+                        
+                        data-widget-colorbutton="false"	
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="false"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true" 
+                        data-widget-sortable="false"
+                        
+                    -->
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+                        <h2>Widget Title </h2>				
+                        
+                    </header>
+    
+                    <!-- widget div-->
+                    <div>
+                        
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                            <input class="form-control" type="text">	
+                        </div>
+                        <!-- end widget edit box -->
+                        
+                        <!-- widget content -->
+                        <div class="widget-body">
+                            
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Data de Nascimento</th>
+                                    <th>Gênero</th>
+                                    <th>Estado Civil</th>
+                                    <th>Endereço</th>
+                                    <th>Bairro</th>
+                                    <th>Cidade</th>
+                                </thead>
+                                <tbody>
+                                    {% for paciente in object_list %}
+                                    <tr>
+                                        <td>{{ paciente.nome_completo }}</td>
+                                        <td>{{ paciente.cpf }}</td>
+                                        <td>{{ paciente.nascimento }}</td>
+                                        <td>{{ paciente.genero }}</td>
+                                        <td>{{ paciente.estado_civil }}</td>
+                                        <td>{{ paciente.endereco }}{% if paciente.complemento %}, {{ paciente.complemento }}{% endif %}, Nº {{ paciente.numero }}</td>
+                                        <td>{{ paciente.bairro }}</td>
+                                        <td>{{ paciente.cidade }}-{{ paciente.uf }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+    
+                        </div>
+                        <!-- end widget content -->
+                        
+                    </div>
+                    <!-- end widget div -->
+                    
+                </div>
+                <!-- end widget -->
+    
+            </article>
+            <!-- WIDGET END -->
+            
+        </div>
+    
+        <!-- end row -->
+    
+    </section>
+    <!-- end widget grid -->
+
+{% endblock conteudo %}
+
+
+{% block js_plugins %}
+    <script src="{% static 'js/plugin/datatables/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'js/plugin/datatables/dataTables.colVis.min.js' %}"></script>
+	<script src="{% static 'js/plugin/datatables/dataTables.tableTools.min.js' %}"></script>
+	<script src="{% static 'js/plugin/datatables/dataTables.bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/plugin/datatable-responsive/datatables.responsive.min.js' %}"></script>
+
+    <script>
+
+        $(document).ready(function(){
+
+            $('#nav-pacientes').addClass('active')
+        })
+
+    </script>
+{% endblock js_plugins %}
+    

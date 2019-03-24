@@ -16,6 +16,7 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/font-awesome.min.css' %}">
 
 	<!-- SmartAdmin Styles : Caution! DO NOT change the order -->
+	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-production-plugins.min.css' %}">
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-production.min.css' %}">
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-skins.min.css' %}">
 
@@ -147,7 +148,7 @@
 						</li>
 						<li class="divider"></li>
 						<li>
-							<a href="/" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i
+							<a href="/admin/logout/" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i
 									class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
 						</li>
 					</ul>
@@ -156,8 +157,7 @@
 
 			<!-- logout button -->
 			<div id="logout" class="btn-header transparent pull-right">
-				<span> <a href="/" title="Sign Out" data-action="userLogout"
-						data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i
+				<span> <a href="/admin/logout/" title="Sign Out" data-action="userLogout"><i
 							class="fa fa-sign-out"></i></a> </span>
 			</div>
 			<!-- end logout button -->
@@ -185,19 +185,11 @@
 				<!-- User image size is adjusted inside CSS, it should stay as is -->
 
 				<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-					{% if fisioterapeuta %}
-					<img src="{{ fisioterapeuta.funcionario.foto.url }}" alt="me" class="online" />
+					<img src="{{ user.funcionario.foto.url }}" alt="me" class="online" />
 					<span>
-						{{ fisioterapeuta.funcionario.usuario.first_name }}
+						{{ user.first_name }}
 					</span>
 					<i class="fa fa-angle-down"></i>
-					{% else %}
-					<img src="{{ funcionario.foto.url }}" alt="me" class="online" />
-					<span>
-						{{ funcionario.usuario.first_name }}
-					</span>
-					<i class="fa fa-angle-down"></i>
-					{% endif %}
 				</a>
 
 			</span>
@@ -218,32 +210,32 @@
 				-->
 			{% block navegacao %}
 			<ul>
-				<li class="active">
+				<li class="" id="nav-inicio">
 					<a href="/" title="Página Inicial"><i class="fa fa-lg fa-fw fa-home"></i>
 						<span class="menu-item-parent"> Início</span>
 					</a>
 				</li>
-				<li>
-					<a href="#" title="Lista de Pacientes"><i class="fa fa-lg fa-fw fa-money"></i>
+				<li id="nav-caixa">
+					<a href="#" title="Movimentação do Caixa"><i class="fa fa-lg fa-fw fa-money"></i>
 						<span class="menu-item-parent"> Caixa</span>
 					</a>
 				</li>
-				<li>
-					<a href="#" title="Lista de Pacientes"><i class="fa fa-lg fa-fw fa-group"></i>
+				<li id="nav-pacientes">
+					<a href="{% url 'pacientes:paciente_list' %}" title="Lista de Pacientes"><i class="fa fa-lg fa-fw fa-group"></i>
 						<span class="menu-item-parent"> Pacientes</span>
 					</a>
 				</li>
-				<li>
+				<li id="nav-fisioterapia">
 					<a href="#" title="Pacientes de Fisioterapia"><i class="fa fa-lg fa-fw  fa-wheelchair"></i> 
 						<span class="menu-item-parent">Fisioterapia</span>
 					</a>
 				</li>
-				<li>
+				<li id="nav-estetica">
 					<a href="#" title="Pacientes de Estética"><i class="fa fa-lg fa-fw  fa-star-o"></i> 
 						<span class="menu-item-parent">Estética</span>
 					</a>
 				</li>
-				<li>
+				<li id="nav-pilates">
 					<a href="#" title="Turmas de Pilates"><i class="fa fa-lg fa-fw  fa-child"></i> 
 					<span class="menu-item-parent">Pilates</span>
 					</a>
@@ -258,71 +250,76 @@
 	</aside>
 	<!-- END NAVIGATION -->
 
-	<!-- #MAIN PANEL -->
-	<div id="main" role="main">
+		<!-- MAIN PANEL -->
+		<div id="main" role="main">
 
-		<!-- RIBBON -->
-		<div id="ribbon">
+			<!-- RIBBON -->
+			<div id="ribbon">
 
-			<!-- breadcrumb -->
-			<ol class="breadcrumb">
-				<li>Início</li>
-				{% block breadcrumb %}{% endblock breadcrumb %}
-			</ol>
-			<!-- end breadcrumb -->
+				<!-- breadcrumb -->
+				<ol class="breadcrumb">
+					<li>Início</li>
+				</ol>
+				<!-- end breadcrumb -->
 
-			<!-- You can also add more buttons to the
+				<!-- You can also add more buttons to the
 				ribbon for further usability
 
 				Example below:
 
-				<span class="ribbon-button-alignment pull-right" style="margin-right:25px">
-					<a href="#" id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa fa-grid"></i> Change Grid</a>
-					<span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa fa-plus"></i> Add</span>
-					<button id="search" class="btn btn-ribbon" data-title="search"><i class="fa fa-search"></i> <span class="hidden-mobile">Search</span></button>
+				<span class="ribbon-button-alignment pull-right">
+				<span id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa-grid"></i> Change Grid</span>
+				<span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa-plus"></i> Add</span>
+				<span id="search" class="btn btn-ribbon" data-title="search"><i class="fa-search"></i> <span class="hidden-mobile">Search</span></span>
 				</span> -->
 
+			</div>
+			<!-- END RIBBON -->
+		
+			<!-- MAIN CONTENT -->
+			<div id="content">
+
+				<!-- row -->
+				<div class="row">
+					
+					<!-- col -->
+					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+						<h1 class="page-title txt-color-blueDark">
+
+							<!-- PAGE HEADER -->
+							{% block cabecalho %}
+								<i class="fa-fw fa fa-home"></i>
+								Início <span>> 
+								{% if user.funcionario.fisioterapeuta %}
+									{% if user.funcionario.genero != 'f' %}
+										Bem-vindo Dr. {{ user.first_name }}!
+									{% else %}
+										Bem-vinda Dra. {{ user.first_name }}!
+									{% endif %}
+								{% else %}
+									{% if user.funcionario.genero != 'f' %}
+										Bem-vindo {{ user.funcionario }}!
+									{% else %}
+										Bem-vinda {{ user.funcionario }}!
+									{% endif %}
+								{% endif %}
+								</span>
+							{% endblock cabecalho %}
+						</h1>
+					</div>
+					<!-- end col -->
+					
+				</div>
+				<!-- end row -->
+				
+				{% block conteudo %}
+
+				{% endblock conteudo %}
+			</div>
+			<!-- END MAIN CONTENT -->
+
 		</div>
-		<!-- END RIBBON -->
-
-		<!-- #MAIN CONTENT -->
-
-
-		<!-- col -->
-		<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-			<h1 class="page-title txt-color-blueDark">
-
-				<!-- PAGE HEADER -->
-				{% block cabecalho %}
-				<i class="fa-fw fa fa-home"></i>
-				Início <span>> 
-				{% if fisioterapeuta %}
-					{% if fisioterapeuta.funcionario.genero != 'f' %}
-						Bem-vindo Dr. {{ fisioterapeuta.funcionario.usuario.first_name }}!
-					{% else %}
-						Bem-vinda Dra. {{ fisioterapeuta.funcionario.usuario.first_name }}!
-					{% endif %}
-				{% else %}
-					{% if funcionario.genero != 'f' %}
-						Bem-vindo {{ funcionario }}!
-					{% else %}
-						Bem-vinda {{ funcionario }}!
-					{% endif %}
-				{% endif %}
-				</span>
-				{% endblock cabecalho %}
-			</h1>
-		</div>
-		<!-- end col -->
-
-		{% block principal %} {% endblock principal %}
-
-		<!-- end row -->
-
-		<!-- END #MAIN CONTENT -->
-
-	</div>
-	<!-- END #MAIN PANEL -->
+		<!-- END MAIN PANEL -->
 
 	<!-- #PAGE FOOTER -->
 	<div class="page-footer">
@@ -378,8 +375,23 @@
 		<![endif]-->
 
 	<!-- MAIN APP JS FILE -->
-	<script src="{% static 'js/app.min.js' %}"></script>
-	{% block js_plugins %}{% endblock js_plugins %}
+	<script src="{% static 'js/app.js' %}"></script>
+	<!-- JARVIS WIDGETS -->
+	<script src="{% static 'js/smartwidgets/jarvis.widget.min.js' %}"></script>
+	<!-- SMART NOTIFICATIONS -->
+	<script src="{% static 'js/notification/SmartNotification.min.js' %}"></script>
+	<script>
+		$(document).ready(function(){
+			pageSetUp()
+		})
+	</script>
+	{% block js_plugins %}
+	<script>
+		$(document).ready(function(){
+			$('#nav-inicio').addClass('active')
+		})
+	</script>
+	{% endblock js_plugins %}
 </body>
 
 </html>

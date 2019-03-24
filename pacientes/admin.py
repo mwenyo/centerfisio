@@ -1,3 +1,7 @@
+"""Registro Admin Pacientes"""
 from django.contrib import admin
 
-# Register your models here.
+from .models import Paciente, Contato
+
+admin.site.register(Paciente)
+admin.site.register(Contato)
