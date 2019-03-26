@@ -1,1 +1,13 @@
 O Centerfisio Borges é um centro de fisioterapia, estética e pilates. Na fisioterapia atende pacientes particulares ou por convênio entre o SUS ou planos de saúde. Os pacientes de pilates praticam em turmas de até 5 alunos com no mínimo um paciente. Os pacientes de estética podem escolher entre os mais diversos tratamentos estéticos, bem como optar por pacotes de tratamentos com preços variados. O sistema deve ser capaz de gerenciar o caixa e possível, organizar uma agenda com os pacientes do dia/semana/mês. Os pacientes particulares podem remarcar seu atendimento.
+
+tipo-procedimento
+-Descrição
+-
+
+Procedimento:
+-Paciente;
+-Fisioterapeuta;
+-Data/Hora (Agendamento)
+-Dados da avaliação
+-Valor(padrão)
+-

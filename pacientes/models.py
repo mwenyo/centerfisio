@@ -54,16 +54,17 @@ class Paciente(models.Model):
     sobrenome = models.CharField(max_length=200)
     cpf = models.CharField("CPF", max_length=14, null=False)
     nascimento = models.DateField("Data de nascimento", null=False)
+    genero = models.CharField("Gênero", choices=GENERO_CHOICE, max_length=2,\
+        null=True, blank=True)
+    estado_civil = models.CharField("Estado civíl", choices=ESTADO_CIVIL_CHOICES, \
+        max_length=50, null=True, blank=True)
+    profissao = models.CharField("Profissão", max_length=50, default="Desempregado")
     endereco = models.CharField("Endereço", max_length=200, null=True, blank=True)
     complemento = models.CharField(max_length=200, null=True, blank=True)
     numero = models.PositiveSmallIntegerField("Número", null=True, blank=True)
     bairro = models.CharField(max_length=200, null=True, blank=True)
     cidade = models.CharField(max_length=200, null=True, blank=True)
     uf = models.CharField('Estado', choices=UF_CHOICES, max_length=2,\
-        null=True, blank=True)
-    estado_civil = models.CharField("Estado civíl", choices=ESTADO_CIVIL_CHOICES, \
-        max_length=50, null=True, blank=True)
-    genero = models.CharField("Gênero", choices=GENERO_CHOICE, max_length=2,\
         null=True, blank=True)
 
     @property
