@@ -1,7 +1,7 @@
 """Models de Clínica"""
 from django.db import models
 
-from funcionarios.models import Administrador #Fisioterapeuta,
+from funcionarios.models import Administrador, Fisioterapeuta, Esteticista
 from pacientes.models import Paciente
 
 class Tipo(models.Model):
@@ -18,7 +18,6 @@ class Tipo(models.Model):
     def __str__(self):
         """Unicode representation of Tipo."""
         return self.nome
-
 
 class Procedimento(models.Model):
     """Model definition for Procedimento."""
@@ -141,27 +140,6 @@ class ProcedimentoProntuario(models.Model):
         """Unicode representation of ProcedimentoProntuario."""
         return str(self.prontuario) + " - " + str(self.procedimento)
 
-"""
-class ProntuarioConveniado(models.Model):
-    """"""Model definition for ProntuarioConveniado.""""""
-
-    prontuario = models.OneToOneField(Prontuario, on_delete=models.CASCADE)
-    convenio = models.ForeignKey(Convenio, on_delete=models.CASCADE)
-    cod_ans = models.CharField("Código ANS", max_length=6)
-
-    class Meta:
-        """"""Meta definition for ProntuarioConveniado.""""""
-
-        verbose_name = 'Prontuario Conveniado'
-        verbose_name_plural = 'Prontuarios Conveniados'
-
-    def __str__(self):
-        """"""Unicode representation of ProntuarioConveniado.""""""
-        return str(self.prontuario) + " - " + str(self.convenio)
-
-"""
-
-
 class Sessao(models.Model):
     """Model definition for Sessao."""
 
@@ -180,8 +158,9 @@ class Sessao(models.Model):
     administrador = models.ForeignKey(Administrador, on_delete=models.CASCADE)
     procedimento_prontuario = models.ForeignKey(ProcedimentoProntuario, on_delete=models.CASCADE)
     data_agendamento = models.DateField("Data de Agendamento", auto_now=False, auto_now_add=False)
-    horario_agendamento = models.DateField("Horário de Agendamento", \
+    horario_agendamento = models.TimeField("Horário de Agendamento", \
         auto_now=False, auto_now_add=False)
+    conduta = models.TextField(null=True, blank=True)
     status = models.PositiveSmallIntegerField("Situação", choices=STATUS_CHOICES)
 
     class Meta:
@@ -192,3 +171,37 @@ class Sessao(models.Model):
 
     def __str__(self):
         """Unicode representation of Sessao."""
+        return str(self.procedimento_prontuario) + ' - ' + str(self.data_agendamento) + " " + \
+            str(self.horario_agendamento)
+
+class SessaoFisioterapia(models.Model):
+    """Model definition for SessaoFisioterapia."""
+
+    fisioterapeuta = models.ForeignKey(Fisioterapeuta, on_delete=models.CASCADE)
+    sessao = models.ForeignKey(Sessao, on_delete=models.CASCADE)
+
+    class Meta:
+        """Meta definition for SessaoFisioterapia."""
+
+        verbose_name = 'Sessão de Fisioterapia'
+        verbose_name_plural = 'Sessões de Fisioterapia'
+    
+    def __str__(self):
+        """Unicode representation of Sessao."""
+        return str(self.fisioterapeuta) + " - " + str(self.sessao)
+
+class SessaoEstetica(models.Model):
+    """Model definition for SessaoEstetica."""
+
+    esteticista = models.ForeignKey(Esteticista, on_delete=models.CASCADE)
+    sessao = models.ForeignKey(Sessao, on_delete=models.CASCADE)
+
+    class Meta:
+        """Meta definition for SessaoEstetica."""
+
+        verbose_name = 'Sessão de Estetica'
+        verbose_name_plural = 'Sessões de Estetica'
+
+    def __str__(self):
+        """Unicode representation of Sessao."""
+        return str(self.esteticista) + " - " + str(self.sessao)
