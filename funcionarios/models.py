@@ -144,3 +144,18 @@ class Instrutor(models.Model):
         """Unicode representation of Instrutor de Pilates."""
 
         return self.funcionario.nome_completo
+
+class Administrador(models.Model):
+    """Model definition for Administrador."""
+
+    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+
+    class Meta:
+        """Meta definition for Administrador."""
+
+        verbose_name = 'Administrador'
+        verbose_name_plural = 'Administradores'
+
+    def __str__(self):
+        """Unicode representation of Administrador."""
+        return self.funcionario.nome_completo
