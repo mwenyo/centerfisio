@@ -54,6 +54,8 @@ class Paciente(models.Model):
     sobrenome = models.CharField(max_length=200)
     cpf = models.CharField("CPF", max_length=14, null=False)
     nascimento = models.DateField("Data de nascimento", null=False)
+    telefone1 = models.CharField("Telefone", max_length=20)
+    telefone2 = models.CharField("Telefone 2", max_length=20, null=True, blank=True)
     genero = models.CharField("Gênero", choices=GENERO_CHOICE, max_length=2,\
         null=True, blank=True)
     estado_civil = models.CharField("Estado civíl", choices=ESTADO_CIVIL_CHOICES, \
@@ -101,3 +103,4 @@ class Contato(models.Model):
 
     def __str__(self):
         """Unicode representation of Contato."""
+        return str(self.paciente) + " - " + self.nome + " - " + self.telefone1
