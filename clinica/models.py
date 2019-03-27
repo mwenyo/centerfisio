@@ -20,10 +20,17 @@ class TipoTratamento(models.Model):
 class Procedimento(models.Model):
     """Model definition for Procedimento."""
 
+    STATUS_CHOICES = (
+        (1, "ATIVO"),
+        (0, "INATIVO"),
+    )
+
     tipo = models.ForeignKey(TipoTratamento, on_delete=models.CASCADE)
     nome = models.CharField(max_length=200)
     descricao = models.TextField("Descrição")
     valor_unitario = models.FloatField("Valor Unitário", default=0.0)
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=1)
+
 
     def __str__(self):
         """Unicode representation of Procedimento."""
@@ -33,8 +40,8 @@ class Pacote(models.Model):
     """Model definition for Pacote."""
 
     STATUS_CHOICES = (
-        (0, "FINALIZADA"),
-        (1, "ATIVA")
+        (1, "ATIVO"),
+        (0, "INATIVO"),
     )
 
     tipo = models.ForeignKey(TipoTratamento, on_delete=models.CASCADE)
@@ -42,9 +49,12 @@ class Pacote(models.Model):
     descricao = models.TextField("Descrição")
     valor = models.FloatField(default=0)
     promocao = models.BooleanField("Promoção", default=False)
-    inicio = models.DateField("Data Inicial", auto_now=False, auto_now_add=False)
-    termino = models.DateField("Data Final", auto_now=False, auto_now_add=False)
+    inicio = models.DateField("Data Inicial", \
+        auto_now=False, auto_now_add=False, null=True, blank=True)
+    termino = models.DateField("Data Final", \
+        auto_now=False, auto_now_add=False, null=True, blank=True)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES)
+    procedimentos = models.ManyToManyField(Procedimento, through='PacoteProcedimento')
 
     def __str__(self):
         """Unicode representation of Pacote."""
@@ -59,9 +69,9 @@ class PacoteProcedimento(models.Model):
     class Meta:
         """Meta definition for PacoteProcedimento."""
 
-        verbose_name = 'Pacote de Procedimentos'
+        verbose_name = 'Pacote de procedimentos'
         verbose_name_plural = 'Pacotes de Procedimentos'
 
     def __str__(self):
         """Unicode representation of PacoteProcedimento."""
-        return self.pacote + ' - ' + self.procedimento
+        return self.pacote.nome + ' - ' + self.procedimento.nome

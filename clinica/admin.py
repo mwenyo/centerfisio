@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import TipoTratamento, Procedimento, Pacote, PacoteProcedimento
+
+admin.site.register(TipoTratamento)
+admin.site.register(Procedimento)
+admin.site.register(Pacote)
+admin.site.register(PacoteProcedimento)
