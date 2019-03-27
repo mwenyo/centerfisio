@@ -1,7 +1,7 @@
 """Models de Estética"""
 from django.db import models
 
-from funcionarios.models import Administrador, Fisioterapeuta, Funcionario
+from funcionarios.models import Administrador #Fisioterapeuta,
 from pacientes.models import Paciente
 
 class Tipo(models.Model):
