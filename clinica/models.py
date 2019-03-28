@@ -80,8 +80,18 @@ class PacoteProcedimento(models.Model):
 
 class Convenio(models.Model):
     """Model definition for Convenio."""
+    ATIVO = 1
+    INATIVO = 0
+
+    STATUS_CHOICES = (
+        (ATIVO, "ATIVO"),
+        (INATIVO, "INATIVO"),
+
+    )
 
     nome = models.CharField(max_length=200)
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=ATIVO)
+
 
     class Meta:
         """Meta definition for Convenio."""
@@ -185,7 +195,7 @@ class SessaoFisioterapia(models.Model):
 
         verbose_name = 'Sessão de Fisioterapia'
         verbose_name_plural = 'Sessões de Fisioterapia'
-    
+
     def __str__(self):
         """Unicode representation of Sessao."""
         return str(self.fisioterapeuta) + " - " + str(self.sessao)

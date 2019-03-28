@@ -210,7 +210,7 @@
 				-->
 			{% block navegacao %}
 			<ul>
-				<li class="" id="nav-inicio">
+				<li class="active" id="nav-inicio">
 					<a href="/" title="Página Inicial"><i class="fa fa-lg fa-fw fa-home"></i>
 						<span class="menu-item-parent"> Início</span>
 					</a>
@@ -226,19 +226,51 @@
 					</a>
 				</li>
 				<li id="nav-fisioterapia">
-					<a href="#" title="Pacientes de Fisioterapia"><i class="fa fa-lg fa-fw  fa-wheelchair"></i> 
+					<a href="#" title="Pacientes de Fisioterapia"><i class="fa fa-lg fa-fw fa-wheelchair"></i> 
 						<span class="menu-item-parent">Fisioterapia</span>
 					</a>
 				</li>
 				<li id="nav-estetica">
-					<a href="#" title="Pacientes de Estética"><i class="fa fa-lg fa-fw  fa-star-o"></i> 
+					<a href="#" title="Pacientes de Estética"><i class="fa fa-lg fa-fw fa-star-o"></i> 
 						<span class="menu-item-parent">Estética</span>
 					</a>
 				</li>
 				<li id="nav-pilates">
-					<a href="#" title="Turmas de Pilates"><i class="fa fa-lg fa-fw  fa-child"></i> 
+					<a href="#" title="Turmas de Pilates"><i class="fa fa-lg fa-fw fa-child"></i> 
 					<span class="menu-item-parent">Pilates</span>
 					</a>
+				</li>
+				<li id="nav-config">
+					<a href="#" title="Configurações"><i class="fa fa-lg fa-fw fa-gears"></i> 
+					<span class="menu-item-parent">Configurações</span>
+					</a>
+					<ul>
+						<li>
+							<a href="#"><i class="fa fa-fw fa-pencil-square-o"></i> Cadastros</a>
+							<ul>
+								<li>
+									<a href="#">
+										<i class="fa fa-fw fa-dropbox"></i> Pacotes
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<i class="fa fa-fw fa-flash"></i> Procedimentos
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'clinica:convenio_lista' %}">
+										<i class="fa fa-fw fa-medkit"></i> Convênios
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'clinica:convenio_lista' %}">
+										<i class="fa fa-fw fa-user"></i> Funcionarios
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
 				</li>
 			
 			</ul>
@@ -288,7 +320,7 @@
 				<div class="row">
 					
 					<!-- col -->
-					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
 						<h1 class="page-title txt-color-blueDark">
 
 							<!-- PAGE HEADER -->
@@ -316,7 +348,20 @@
 					
 				</div>
 				<!-- end row -->
-				
+				{% if messages %}
+					<div class="row">
+						<div class="col col-sm-12 padding-10">
+							{% for message in messages %}
+								<div class="alert alert-block {{ message.tags }} alert-dismissible" role="alert">
+										<a class="close" data-dismiss="alert" href="#">×</a>
+									<h4 class="alert-heading">Sucesso!</h4>
+									{{ message }}
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+
 				{% block conteudo %}
 
 				{% endblock conteudo %}
