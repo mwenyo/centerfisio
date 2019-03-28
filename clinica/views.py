@@ -1,7 +1,7 @@
 """Views Clínica"""
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView
+from django.views.generic import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
@@ -9,17 +9,10 @@ from django.contrib import messages
 from .models import Convenio
 
 @method_decorator(login_required, name='dispatch')
-class ConvenioView(TemplateView):
+class ConvenioView(ListView):
     """Lista de Convenios"""
+    model = Convenio
     template_name = "clinica/convenio/list.html"
-
-    def get_context_data(self, **kwargs):
-        """Coleta de dados do BD"""
-
-        context = super(ConvenioView, self).get_context_data(**kwargs)
-        convenios = Convenio.objects.all() #filter(status=Convenio.ATIVO)
-        context['convenios'] = convenios
-        return context
 
 @method_decorator(login_required, name='dispatch')
 class ConvenioUpdateView(SuccessMessageMixin, UpdateView): # pylint: disable=too-many-ancestors
