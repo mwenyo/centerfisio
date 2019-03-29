@@ -1,0 +1,147 @@
+{% extends 'clinica/procedimento/list.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+    <li>Configurações</li>
+    <li>Cadastros</li>
+    <li>Procedimentos</li>
+    
+    {% if object %}
+        <li><strong>{{ object.nome }}</strong></li>
+        <li>Editar</li>
+    {% else %}
+        <li><strong>Adicionar</strong></li>
+    {% endif %}
+{% endblock breadcrumb %}
+
+{% block conteudo %}
+<!--
+    The ID "widget-grid" will start to initialize all widgets below 
+    You do not need to use widgets if you dont want to. Simply remove 
+    the <section></section> and you can use wells or panels instead 
+-->
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+    
+    <!-- row -->
+    <div class="row">
+            
+            <!--div class="col-xs-12 col-sm-12 col-md-2 col-lg-2"></div-->
+        
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget jarviswidget-color-light-red" id="wid-id-0" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+                    <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+                        
+                        data-widget-colorbutton="false"	
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="false"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true" 
+                        data-widget-sortable="false"
+                        
+                    -->
+                    <header>
+                        <h2>
+                        
+                        {% if object %}
+                            Editar Procedimento {{ object.nome }}    
+                        {% else %}
+                            Adicionar Procedimento
+                        {% endif %}
+                            
+                        </h2>
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+                                            
+                        <!-- widget content -->
+                        <div class="widget-body no-padding">
+                            <div class="tab-content padding-10">
+                            <form action="" method="POST" class="smart-form">{% csrf_token %}
+                                <fieldset>
+                                    <div class="row">
+                                        <section class="col col-6">
+                                            <label class="label">Nome do Procedimento</label>
+                                            <label class="input">
+                                                <i class="icon-append fa fa-flash"></i>
+                                                {{ form.nome }}
+                                            </label>
+                                        </section>
+                                        <section class="col col-6">
+                                            <label class="label">Tipo de Tratamento</label>
+                                            <label class="select">
+                                                {{ form.tipo }}
+                                                <i></i>
+                                            </label>
+                                        </section>
+                                    </div>
+
+                                    <div class="row">
+                                        <section class="col col-6">
+                                            <label class="label">Valor Unitário</label>
+                                            <label class="input">
+                                                <i class="icon-append fa fa-money"></i>
+                                                {{ form.valor_unitario }}
+                                            </label>
+                                        </section>
+                                        <section class="col col-6">
+                                            <label class="label">Status</label>
+                                            <label class="select">
+                                                {{ form.status }}
+                                                <i></i>
+                                            </label>
+                                        </section>
+                                    </div>
+                                    <div class="row">
+                                        <section class="col col-lg-12">
+                                            <label class="label">Descrição</label>
+                                            <label class="textarea">
+                                                {{ form.descricao }}
+                                                <i class="icon-append fa fa-comment text-align-right"></i>
+                                            </label>
+                                        </section>
+                                    </div>
+                                </fieldset>
+                                <footer>
+                                    <a href="{% url 'clinica:procedimento_lista' %}" class="btn btn-default">Voltar</a>
+                                    <input class="btn btn-primary" type="submit" value="Salvar">
+                                </footer>
+                            </form>
+                        </div>                        
+                        </div>
+                        <!-- end widget content -->
+                        
+                    </div>
+                    <!-- end widget div -->
+                    
+                </div>
+                <!-- end widget -->
+    
+            </article>
+            <!-- WIDGET END -->
+            
+        </div>
+    
+        <!-- end row -->
+    
+    </section>
+    <!-- end widget grid -->
+
+{% endblock conteudo %}
+
+{% block js_plugins %}
+    <script>
+        $(function(){
+            $('#id_nome').focus()
+        })
+    </script>
+{% endblock js_plugins %}
+    

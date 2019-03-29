@@ -22,6 +22,9 @@ class Tipo(models.Model):
 class Procedimento(models.Model):
     """Model definition for Procedimento."""
 
+    ATIVO = 1
+    INATIVO = 0
+
     STATUS_CHOICES = (
         (1, "ATIVO"),
         (0, "INATIVO"),
@@ -31,7 +34,7 @@ class Procedimento(models.Model):
     nome = models.CharField(max_length=200)
     descricao = models.TextField("Descrição")
     valor_unitario = models.FloatField("Valor Unitário", default=0.0)
-    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=1)
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=ATIVO)
 
 
     def __str__(self):

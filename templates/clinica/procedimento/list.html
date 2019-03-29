@@ -46,12 +46,12 @@
                                 <i class="fa fa-fw fa-dropbox"></i> Pacotes
                             </a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="{% url 'clinica:procedimento_lista' %}">
                                 <i class="fa fa-fw fa-flash"></i> Procedimentos
                             </a>
                         </li>
-                        <li class="active">
+                        <li>
                             <a href="{% url 'clinica:convenio_lista' %}">
                                 <i class="fa fa-fw fa-medkit"></i> Convênios
                             </a>
@@ -72,13 +72,13 @@
 {% block breadcrumb %}
     <li>Configurações</li>
     <li>Cadastros</li>
-    <li><strong>Convênios</strong></li>
+    <li><strong>Procedimentos</strong></li>
 {% endblock breadcrumb %}
 
 
 {% block cabecalho %}
     <i class="fa-fw fa fa-cog"></i>
-    Configuraçãoes <span> > Cadastros > Convênios </span>
+    Configuraçãoes <span> > Cadastros > Procedimentos </span>
 {% endblock cabecalho %}
     
 
@@ -100,7 +100,7 @@
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 
                 <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-teal" id="wid-id-0" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+                <div class="jarviswidget jarviswidget-color-light-red" id="wid-id-0" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-custombutton="false" data-widget-sortable="false">
                     <!-- widget options:
                         usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
                         
@@ -115,7 +115,7 @@
                         
                     -->
                     <header>
-                        <h2>Lista de Convênios</h2>
+                        <h2>Lista de Procedimentos</h2>
                     </header>
 
                     <!-- widget div-->
@@ -134,8 +134,8 @@
                                     </div>
                                     <div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
                                         
-                                        <a href="{% url 'clinica:convenio_adicionar' %}" class="btn btn-primary">
-                                            <i class="fa fa-plus"></i> <span class="hidden-mobile"> Adicionar Convênio </span>
+                                        <a href="{% url 'clinica:procedimento_adicionar' %}" class="btn btn-primary">
+                                            <i class="fa fa-plus"></i> <span class="hidden-mobile"> Adicionar Procedimento </span>
                                         </a>
                                         
                                     </div>
@@ -146,23 +146,29 @@
                             <table class="table table-striped table-bordered table-hover dataTable padding-10">
                                 <thead>
                                     <th class="text-center"><i class="fa fa-fw fa-medkit text-muted hidden-md hidden-sm hidden-xs"></i> Nome</th>
+                                    <th class="text-center"><i class="fa fa-fw fa-wheelchair text-muted hidden-md hidden-sm hidden-xs"></i> Tipo de Tratamento</th>
+                                    <th class="text-center"><i class="fa fa-fw fa-comments text-muted hidden-md hidden-sm hidden-xs"></i> Descrição</th>
+                                    <th class="text-center"><i class="fa fa-fw fa-money text-muted hidden-md hidden-sm hidden-xs"></i> Valor Unitário</th>
                                     <th class="text-center"><i class="fa fa-fw fa-tag text-muted hidden-md hidden-sm hidden-xs"></i> Status</th>
                                     <th class="text-center"><i class="fa fa-fw fa-flash text-muted hidden-md hidden-sm hidden-xs"></i> Ações</th>
                                 </thead>
                                 <tbody>
-                                    {% for convenio in object_list %}
+                                    {% for procedimento in object_list %}
                                     <tr>
-                                        <td><strong>{{ convenio.nome }}</strong></td>
+                                        <td><strong>{{ procedimento.nome }}</strong></td>
+                                        <td><strong>{{ procedimento.tipo }}</strong></td>
+                                        <td><strong>{{ procedimento.descricao|truncatechars:40 }}</strong></td>
+                                        <td class="text-center"><strong>R$ {{ procedimento.valor_unitario }}</strong></td>
                                         <td class="text-center">
-                                            {% if convenio.status == 1 %}
+                                            {% if procedimento.status == 1 %}
                                                 <i class="fa fa-lg fa-2x fa-check"></i>
                                             {% else %}
                                                 <i class="fa fa-lg fa-2x fa-times"></i>
                                             {% endif %}                                                
                                         </td>
                                         <td class="text-center">
-                                            <a href="{% url 'clinica:convenio_editar' convenio.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Editar</a>
-                                            <a href="{% url 'clinica:convenio_deletar' convenio.id %}" class="btn btn-sm btn-danger deletar" rel="{{ convenio.id }}" rel2=""><i class="fa fa-trash-o"></i> Excluir</a>
+                                            <a href="{% url 'clinica:procedimento_editar' procedimento.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Editar</a>
+                                            <a href="{% url 'clinica:procedimento_deletar' procedimento.id %}" class="btn btn-sm btn-danger deletar" rel="{{ procedimento.id }}" rel2=""><i class="fa fa-trash-o"></i> Excluir</a>
                                         </td>
                                     </tr>
                                     {% endfor %}

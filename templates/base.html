@@ -254,7 +254,7 @@
 									</a>
 								</li>
 								<li>
-									<a href="#">
+									<a href="{% url 'clinica:procedimento_lista' %}">
 										<i class="fa fa-fw fa-flash"></i> Procedimentos
 									</a>
 								</li>
@@ -348,7 +348,7 @@
 					
 				</div>
 				<!-- end row -->
-				{% if messages %}
+				{% if k %}
 					<div class="row">
 						<div class="col col-sm-12 padding-10">
 							{% for message in messages %}
@@ -433,6 +433,18 @@
 	<script>
 		$(document).ready(function(){
 			pageSetUp()
+			// trecho em Python kkkkk
+			{% if messages %}
+				{% for message in messages %}
+					$.smallBox({
+						title : "{{ message }}",
+						content : "<i class='fa fa-clock-o'></i> <i>2 segundos atrás...</i>",
+						color : '{{ message.tags }}',
+						iconSmall : "fa fa-check bounce animated",
+						timeout : 3000
+					})
+				{% endfor %}
+			{% endif %}
 		})
 	</script>
 	{% block js_plugins %}

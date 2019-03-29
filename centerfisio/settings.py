@@ -137,9 +137,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 MESSAGE_TAGS = {
-    messages.DEBUG: 'alert-info',
-    messages.INFO: 'alert-info',
-    messages.SUCCESS: 'alert-success',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-danger',
+    messages.DEBUG: '#d6dde7',
+    messages.INFO: '#d6dde7',
+    messages.SUCCESS: '#659265',
+    messages.WARNING: '#efe1b3',
+    messages.ERROR: '#a65858',
 }
