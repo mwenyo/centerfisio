@@ -130,8 +130,17 @@ class Esteticista(models.Model):
 class Instrutor(models.Model):
     """Model definition for Instrutor."""
 
+    CREFITO = "CREFITO"
+    CREF = "CREF"
+
+    ORGAO_CHOICES = (
+        (CREFITO, "CREFITO"),
+        (CREF, "CREF"),
+    )
+
     funcionario = models.OneToOneField(Funcionario, on_delete=models.CASCADE)
-    registro = models.CharField("CREFITO/CREF", max_length=50)
+    conselho = models.CharField("Concelho de Classe", max_length=7, choices=ORGAO_CHOICES, default=CREFITO)
+    registro = models.CharField(max_length=50)
     cursos = models.TextField(null=True, blank=True)
 
     class Meta:

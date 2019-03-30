@@ -5,7 +5,7 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from .models import Convenio, Procedimento #, Tipo
+from .models import Convenio, Procedimento
 
 class ConvenioView(LoginRequiredMixin, PermissionRequiredMixin, ListView): # pylint: disable=too-many-ancestors
     """Lista de Convenios"""

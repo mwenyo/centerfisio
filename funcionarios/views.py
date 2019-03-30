@@ -1,26 +1,42 @@
 """View Funcionários"""
 
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-from .models import Funcionario, Fisioterapeuta
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from .models import Funcionario, Fisioterapeuta, Administrador, Esteticista, Instrutor
 
-@method_decorator(login_required, name='dispatch')
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView): # pylint: disable=too-many-ancestors,line-too-long
     """View da HomePage"""
+    model = Funcionario
     template_name = "base.html"
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'funcionarios.view_funcionario'
+
+class FuncionarioView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView): # pylint: disable=too-many-ancestors,line-too-long
+    """View da HomePage"""
+    model = Funcionario
+    template_name = "funcionarios/list.html"
+    login_url = '/'
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'funcionarios.view_funcionario'
 
     def get_context_data(self, **kwargs):
-        """Coleta de dados do BD"""
+        context = super().get_context_data(**kwargs)
 
-        context = super(HomeView, self).get_context_data(**kwargs)
-        funcionario = get_object_or_404(Funcionario, id=self.request.user.id)
-        fisioterapeuta = Fisioterapeuta.objects.filter(funcionario__id=funcionario.id).first()
-
-        if fisioterapeuta:
-            context['fisioterapeuta'] = fisioterapeuta
-            return context
-
-        context['funcionario'] = funcionario
+        context['fisioterapeutas'] = Fisioterapeuta.objects.all()
+        context['administradores'] = Administrador.objects.all()
+        context['esteticistas'] = Esteticista.objects.all()
+        context['instrutores'] = Instrutor.objects.all()
         return context
+
+class FuncionarioCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView): # pylint: disable=too-many-ancestors,line-too-long
+    """Adicionar Funcionarios"""
+    model = Funcionario
+    fields = ['nome', 'status']
+    template_name = "clinica/convenio/form.html"
+    success_message = "Convênio adicionado!"
+    success_url = reverse_lazy('clinica:convenio_lista')
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'clinica.add_convenio'
