@@ -351,29 +351,6 @@
 				
 
 				{% block conteudo %}
-				<div class="row">
-					<div class="col col-sm-3">
-						<div class="well well-sm bg-color-darken txt-color-white text-center">
-							<a href="#" class="btn btn-lg bg-color-darken txt-color-white text-center"><i class="fa fa-user"></i> Administrador</a>
-						</div>
-					</div>
-					<div class="col col-sm-3">
-						<div class="well well-sm bg-color-green txt-color-white text-center">
-								<a href="#" class="btn btn-lg bg-color-green txt-color-white text-center"><i class="fa fa-wheelchair"></i> Fisioterapêuta</a>
-						</div>
-					</div>
-					<div class="col col-sm-3">
-						<div class="well well-sm bg-color-blue txt-color-white text-center">
-								<a href="#" class="btn btn-lg bg-color-blue txt-color-white text-center"><i class="fa fa-star"></i> Esteticista</a>
-						</div>
-					</div>
-					<div class="col col-sm-3">
-						<div class="well well-sm bg-color-red txt-color-white text-center">
-								<a href="#" class="btn btn-lg bg-color-red txt-color-white text-center"><i class="fa fa-child"></i> Instrutor de Pilates</a>
-						</div>
-					</div>
-				</div>
-				
 
 				{% endblock conteudo %}
 			</div>
@@ -444,6 +421,7 @@
 	<script>
 		$(document).ready(function(){
 			pageSetUp()
+			localStorage.clear();
 			// trecho em Python kkkkk
 			{% if messages %}
 				{% for message in messages %}

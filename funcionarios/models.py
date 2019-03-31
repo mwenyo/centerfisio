@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 class Funcionario(models.Model):
@@ -139,7 +140,8 @@ class Instrutor(models.Model):
     )
 
     funcionario = models.OneToOneField(Funcionario, on_delete=models.CASCADE)
-    conselho = models.CharField("Concelho de Classe", max_length=7, choices=ORGAO_CHOICES, default=CREFITO)
+    conselho = models.CharField("Concelho de Classe", max_length=7, \
+        choices=ORGAO_CHOICES, default=CREFITO)
     registro = models.CharField(max_length=50)
     cursos = models.TextField(null=True, blank=True)
 

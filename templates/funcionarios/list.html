@@ -100,7 +100,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
             <!-- Widget ID (each widget will need unique ID)-->
-            <div class="jarviswidget jarviswidget-color-light-red" id="wid-id-0" data-widget-editbutton="false"
+            <div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-0" data-widget-editbutton="false"
                 data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-custombutton="false"
                 data-widget-sortable="false">
                 <!-- widget options:
@@ -119,27 +119,21 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                 <header>
                     <h2>Lista de Funcionários</h2>
                     <ul id="widget-tab-1" class="nav nav-tabs pull-right">
-
                         <li class="active">
-                            <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-wheelchair"></i> <span
-                                    class="hidden-mobile hidden-tablet"> Fisioterapêutas </span></a>
+                            <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-user"></i> <span class="hidden-mobile hidden-tablet"> Administradores </span></a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#hr4"> <i class="fa fa-lg fa-wheelchair"></i> <span class="hidden-mobile hidden-tablet"> Fisioterapêutas </span></a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-star"></i> <span
-                                    class="hidden-mobile hidden-tablet"> Esteticistas </span></a>
+                            <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-star"></i> <span class="hidden-mobile hidden-tablet"> Esteticistas </span></a>
                         </li>
 
                         <li>
 
-                            <a data-toggle="tab" href="#hr3"> <i class="fa fa-lg fa-child"></i> <span
-                                    class="hidden-mobile hidden-tablet"> Instrutores de Pilates </span> </a>
+                            <a data-toggle="tab" href="#hr3"> <i class="fa fa-lg fa-child"></i> <span class="hidden-mobile hidden-tablet"> Instrutores de Pilates </span> </a>
 
-                        </li>
-
-                        <li>
-                            <a data-toggle="tab" href="#hr4"> <i class="fa fa-lg fa-user"></i> <span
-                                    class="hidden-mobile hidden-tablet"> Administradores </span></a>
                         </li>
                     </ul>
                 </header>
@@ -162,7 +156,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                         </button>
                                         <ul class="dropdown-menu pull-right">
                                             <li>
-                                                <a href="javascript:void(0);"><i class="fa fa-user"></i>
+                                                <a href="{% url 'funcionarios:funcionarios_admin_adicionar' %}"><i class="fa fa-user"></i>
                                                     Administrador</a>
                                             </li>
                                             <li>
@@ -179,11 +173,150 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                         </ul>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <div class="tab-content padding-10">
                             <div class="tab-pane fade in active" id="hr1">
+                                <table id="tb4" class="table table-striped table-bordered table-hover dt_basic">
+                                    <thead>
+                                        <th class="text-center">
+                                            Nome Completo</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-calendar text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Data de Nascimento</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-calendar text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Data de Contratação</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-tag text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Telefone(s)
+                                        </th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-flash text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Ações</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for administrador in administradores %}
+                                        <tr>
+                                            <td><strong>{{ administrador.funcionario.nome_completo }}</strong></td>
+                                            <td class="text-center">{{ administrador.funcionario.nascimento }}</td>
+                                            <td class="text-center">{{ administrador.funcionario.contratacao }}</td>
+                                            <td class="text-center">{{ administrador.funcionario.telefone1 }}
+                                                {% if administrador.funcionario.telefone2 %} /
+                                                {{ administrador.funcionario.telefone2 }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
+                                                    Editar</a>
+                                                <a href="#" class="btn btn-sm btn-danger deletar"><i
+                                                        class="fa fa-trash-o"></i> Excluir</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade in" id="hr2">
+                                <table id="tb2" class="table table-striped table-bordered table-hover dt_basic">
+                                    <thead>
+                                        <th class="text-center">
+                                            Nome Completo</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-calendar text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Data de Nascimento</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-calendar text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Data de Contratação</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-tag text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Cursos
+                                        </th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-tag text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Telefone(s)
+                                        </th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-flash text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Ações</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for esteticista in esteticistas %}
+                                        <tr>
+                                            <td><strong>{{ esteticista.funcionario.nome_completo }}</strong></td>
+                                            <td class="text-center">{{ esteticista.funcionario.nascimento }}</td>
+                                            <td class="text-center">{{ esteticista.funcionario.contratacao }}</td>
+                                            <td class="text-center">{{ esteticista.cursos|truncatechars:20 }}
+                                            </td>
+                                            <td class="text-center">{{ esteticista.funcionario.telefone1 }}
+                                                {% if esteticista.funcionario.telefone2 %} /
+                                                {{ esteticista.funcionario.telefone2 }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
+                                                    Editar</a>
+                                                <a href="#" class="btn btn-sm btn-danger deletar"><i
+                                                        class="fa fa-trash-o"></i> Excluir</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade in" id="hr3">
+                                <table id="tb3" class="table table-striped table-bordered table-hover dt_basic">
+                                    <thead>
+                                        <th class="text-center">
+                                            Nome Completo</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-calendar text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Data de Nascimento</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-calendar text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Data de Contratação</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-comments text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Registro</th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-tag text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Cursos
+                                        </th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-tag text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Telefone(s)
+                                        </th>
+                                        <th class="text-center"><i
+                                                class="fa fa-fw fa-flash text-muted hidden-md hidden-sm hidden-xs"></i>
+                                            Ações</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for instrutore in instrutores %}
+                                        <tr>
+                                            <td><strong>{{ instrutore.funcionario.nome_completo }}</strong></td>
+                                            <td class="text-center">{{ instrutore.funcionario.nascimento }}</td>
+                                            <td class="text-center">{{ instrutore.funcionario.contratacao }}</td>
+                                            <td class="text-center">{{ instrutore.conselho }}: {{ instrutore.registro }}
+                                            </td>
+                                            <td class="text-center">{{ instrutore.cursos|truncatechars:20 }}
+                                            </td>
+                                            <td class="text-center">{{ instrutore.funcionario.telefone1 }}
+                                                {% if instrutore.funcionario.telefone2 %} /
+                                                {{ instrutore.funcionario.telefone2 }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
+                                                    Editar</a>
+                                                <a href="#" class="btn btn-sm btn-danger deletar"><i
+                                                        class="fa fa-trash-o"></i> Excluir</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade in" id="hr4">
                                 <table id="tb1" class="table table-striped table-bordered table-hover dt_basic">
                                     <thead>
                                         <th class="text-center">
@@ -240,59 +373,6 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="tab-pane fade in" id="hr2">
-                                <table id="tb2" class="table table-striped table-bordered table-hover dt_basic">
-                                    <thead>
-                                        <th class="text-center">
-                                            Nome Completo</th>
-                                        <th class="text-center"><i
-                                                class="fa fa-fw fa-calendar text-muted hidden-md hidden-sm hidden-xs"></i>
-                                            Data de Nascimento</th>
-                                        <th class="text-center"><i
-                                                class="fa fa-fw fa-calendar text-muted hidden-md hidden-sm hidden-xs"></i>
-                                            Data de Contratação</th>
-                                        <th class="text-center"><i
-                                                class="fa fa-fw fa-tag text-muted hidden-md hidden-sm hidden-xs"></i>
-                                            Cursos
-                                        </th>
-                                        <th class="text-center"><i
-                                                class="fa fa-fw fa-tag text-muted hidden-md hidden-sm hidden-xs"></i>
-                                            Telefone(s)
-                                        </th>
-                                        <th class="text-center"><i
-                                                class="fa fa-fw fa-flash text-muted hidden-md hidden-sm hidden-xs"></i>
-                                            Ações</th>
-                                    </thead>
-                                    <tbody>
-                                        {% for fisioterapeuta in fisioterapeutas %}
-                                        <tr>
-                                            <td><strong>{{ fisioterapeuta.funcionario.nome_completo }}</strong></td>
-                                            <td class="text-center">{{ fisioterapeuta.funcionario.nascimento }}</td>
-                                            <td class="text-center">{{ fisioterapeuta.funcionario.contratacao }}</td>
-                                            <td class="text-center">{{ fisioterapeuta.cursos|truncatechars:20 }}
-                                            </td>
-                                            <td class="text-center">{{ fisioterapeuta.funcionario.telefone1 }}
-                                                {% if fisioterapeuta.funcionario.telefone2 %} /
-                                                {{ fisioterapeuta.funcionario.telefone2 }}
-                                                {% endif %}
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
-                                                    Editar</a>
-                                                <a href="#" class="btn btn-sm btn-danger deletar"><i
-                                                        class="fa fa-trash-o"></i> Excluir</a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade in" id="hr3">
-                                <h2>blá</h2>
-                            </div>
-                            <div class="tab-pane fade in" id="hr4">
-                                <h2>blá</h2>
-                            </div>
                         </div>
                     </div>
                     <!-- end widget content -->
@@ -327,14 +407,6 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
 
     $(document).ready(function () {
 
-        var responsiveHelper_tb1 = undefined;
-        var responsiveHelper_tb2 = undefined;
-
-        var breakpointDefinition = {
-            tablet: 1024,
-            phone: 480
-        };
-
         $tb2 = $('.dt_basic').dataTable({
             "autoWidth": false,
             "responsive": true,
@@ -345,7 +417,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                 $(this).DataTable().columns.adjust().responsive.recalc();
             });
         });
-    })
+    });
 
 </script>
 {% endblock js_plugins %}
