@@ -17,6 +17,26 @@
 
 {% block conteudo %}
 
+{% for field in form %}
+    {% if field.errors %}
+    <div class="row padding-10">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>{{ field.html_name|upper }}</strong>:
+            <br>
+            <ul>
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+
 <!--
         The ID "widget-grid" will start to initialize all widgets below 
         You do not need to use widgets if you dont want to. Simply remove 
@@ -68,11 +88,11 @@
                     <div class="widget-body">
 
                         <div class="row">
-                            <form id="wizard-1" novalidate="novalidate">
+                            <form enctype="multipart/form-data" id="wizard-1" method="post">{% csrf_token %}
                                 <div id="bootstrap-wizard-1" class="col-sm-12">
                                     <div class="form-bootstrapWizard">
                                         <ul class="bootstrapWizard form-wizard">
-                                            <li class="active" data-target="#step1">
+                                            <li data-target="#step1">
                                                 <a href="#tab1" data-toggle="tab"> <span class="step">1</span> <span
                                                         class="title">Dados de Acesso</span> </a>
                                             </li>
@@ -104,7 +124,7 @@
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><i
                                                                     class="fa fa-user fa-fw"></i></span>
-                                                            {{ form.usuario }}
+                                                            {{ form.nome_usuario }}
 
                                                         </div>
                                                     </div>
@@ -362,6 +382,10 @@
                                                             <a href="javascript:void(0);"
                                                                 class="btn btn-lg txt-color-darken"> Próximo </a>
                                                         </li>
+                                                        <li class="finish">
+                                                            <a href="javascript:void(0);"
+                                                                class="btn btn-lg txt-color-success"> Enviar </a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -398,6 +422,7 @@
 <script src="{% static 'js/plugin/jquery-validate/additional-methods.min.js' %}"></script>
 <script src="{% static 'js/plugin/masked-input/jquery.maskedinput.min.js' %}"></script>
 <script src="{% static 'js/plugin/bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"></script>
+<script src="{% static 'js/plugin/bootstrapvalidator/bootstrapValidator.min.js' %}"></script>
 
 <script>
     $(function () {
@@ -413,21 +438,26 @@
                     email: "Seu endereço de email deve ser no formato nome@dominio.com"
                 },
                 nome: {
-                    required: true
+                    required: true,
+                    minlength: 5
                 },
                 sobrenome: {
-                    required: true
+                    required: true,
+                    minlength: 5
                 },
                 senha: {
-                    required: true
+                    required: true,
+                    minlength: 8
                 },
                 confirmar_senha: {
                     required: true,
                     equalTo: "#id_senha",
+                    minlength: 8
                 },
                 usuario: {
                     required: true,
-                    maxlength: 150
+                    maxlength: 150,
+                    minlength: 6
                 },
                 telefone1: {
                     required: true,
@@ -439,6 +469,7 @@
                 },
                 nascimento: {
                     required: true,
+
                 },
                 contratacao: {
                     required: true,
@@ -450,22 +481,36 @@
             },
 
             messages: {
-                nome: "Por favor, preencha com seu nome",
-                sobrenome: "Por favor, preencha com seu sobrenome",
+                nome: {
+                    required: "Por favor, preencha com seu nome",
+                    minlength: "Por favor, preencha com pelo menos 5 caracteres"
+                },
+                sobrenome: {
+                    required: "Por favor, preencha com seu sobrenome",
+                    minlength: "Por favor, preencha com pelo menos 5 caracteres",
+                },
                 email: {
                     required: "Por favor, preencha com seu  email",
                     email: "Seu endereço de email deve ser no formato nome@dominio.com"
                 },
-                senha: "Por favor, preencha com sua senha",
-                confirmar_senha: "Por favor, repita a senha anterior",
+                senha: {
+                    required: "Por favor, preencha com sua senha",
+                    minlength: "Por favor, preencha com pelo menos 8 caracteres",
+                },
+                confirmar_senha: {
+                    required: "Por favor, repita a senha anterior",
+                    equalTo: "As senhas precisam ser as mesmas",
+                    minlength: "Por favor, preencha com pelo menos 8 caracteres"
+                },
                 usuario: {
                     required: "Por favor, preencha com seu login. Letras, números e @/./+/-/_ apenas.",
-                    maxlength: "150 caracteres ou menos. Letras, números e @/./+/-/_ apenas."
+                    maxlength: "150 caracteres ou menos. Letras, números e @/./+/-/_ apenas.",
+                    minlength: "Por favor, preencha com pelo menos 6 caracteres"
                 },
                 telefone1: "Por favor, preencha com seu telefone",
                 cpf: "Por favor, preencha com seu CPF",
                 nascimento: "Por favor, preencha com a sua data de nascimento",
-                nascimento: "Por favor, preencha com a sua data de contratacao",
+                contratacao: "Por favor, preencha com a sua data de contratacao",
                 foto: {
                     required: "Por favor, selecione um arquivo de seu computador",
                     extension: "Apenas arquivos no formato .png, .jpg, .jpeg e .bmp"
@@ -495,13 +540,29 @@
                 var $valid = $("#wizard-1").valid();
                 if (!$valid) {
                     $validator.focusInvalid();
+                    console.log("Formulário inválido");
                     return false;
                 } else {
                     $('#bootstrap-wizard-1').find('.form-wizard').children('li').eq(index - 1).addClass(
                         'complete');
                     $('#bootstrap-wizard-1').find('.form-wizard').children('li').eq(index - 1).find('.step')
                         .html('<i class="fa fa-check"></i>');
+
                 }
+            },
+
+            "onTabShow": function (tab, navigation, index) {
+                if (index == 1)
+                    $('#id_nome').focus();
+                else if (index == 2)
+                    $('#id_endereco').focus();
+            },
+
+            "onTabClick": function (tab, navigation, index) {
+                return false;
+            },
+            "onFinish": function (tab, navigation, index) {
+                $("#wizard-1").submit();
             }
         });
     });

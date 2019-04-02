@@ -6,7 +6,7 @@ from .models import Funcionario, Fisioterapeuta, Esteticista, Instrutor
 class FuncionarioForm(forms.ModelForm):
     """FuncionarioForm definition."""
 
-    usuario = forms.CharField(max_length=150, required=True,
+    nome_usuario = forms.CharField(max_length=150, required=True,
                               widget=forms.TextInput(
                                   attrs={'class': 'form-control input'})
                               )
@@ -33,7 +33,7 @@ class FuncionarioForm(forms.ModelForm):
 
     class Meta:
         model = Funcionario
-        fields = ('usuario', 'email', 'nome', 'sobrenome', 'senha', 'confirmar_senha',
+        fields = ('nome_usuario', 'email', 'nome', 'sobrenome', 'senha', 'confirmar_senha',
                   'cpf', 'nascimento', 'contratacao', 'telefone1',
                   'telefone2', 'endereco', 'complemento',
                   'numero', 'bairro', 'cidade', 'uf', 'estado_civil', 'genero', 'foto',

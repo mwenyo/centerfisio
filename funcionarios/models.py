@@ -70,7 +70,7 @@ class Funcionario(models.Model):
         max_length=50, null=True, blank=True)
     genero = models.CharField("Gênero", choices=GENERO_CHOICE, max_length=2,\
         null=True, blank=True)
-    foto = models.FileField(upload_to='avatars', null=False)
+    foto = models.ImageField(upload_to='avatars', null=False)
 
     class Meta:
         """Meta definition for Funcionario."""

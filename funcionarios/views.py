@@ -1,12 +1,14 @@
 """View Funcionários"""
 
+from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views.generic.base import View
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.shortcuts import render
-#from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from .models import Funcionario, Fisioterapeuta, Administrador, Esteticista, Instrutor
 from .forms import FuncionarioForm
 
@@ -34,7 +36,7 @@ class FuncionarioView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView)
         context['instrutores'] = Instrutor.objects.all()
         return context
 
-class AdministradorCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, View): # pylint: disable=too-many-ancestors,line-too-long
+class AdministradorCreateView(LoginRequiredMixin, PermissionRequiredMixin, View): # pylint: disable=too-many-ancestors,line-too-long
     """Adicionar Funcionarios Administradores"""
     template_name = 'funcionarios/administrador_form.html'
     success_message = "Administrador adicionado!"
@@ -48,3 +50,47 @@ class AdministradorCreateView(LoginRequiredMixin, PermissionRequiredMixin, Succe
 
     def post(self, request, *args, **kwargs):
         """POST"""
+        form = FuncionarioForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            clean = form.cleaned_data
+            usuario = User(
+                username=clean['nome_usuario'],
+                first_name=clean['nome'],
+                last_name=clean['sobrenome'],
+                password='vai mudar',
+                email=clean['email'],
+                is_staff=True,
+            )
+            usuario.set_password(clean['senha'])
+            usuario.save()
+
+            funcionario = Funcionario(
+                usuario=usuario,
+                cpf=clean['cpf'],
+                nascimento=clean['nascimento'],
+                contratacao=clean['contratacao'],
+                telefone1=clean['telefone1'],
+                telefone2=clean['telefone2'],
+                endereco=clean['endereco'],
+                complemento=clean['complemento'],
+                numero=clean['numero'],
+                bairro=clean['bairro'],
+                cidade=clean['cidade'],
+                uf=clean['uf'],
+                estado_civil=clean['estado_civil'],
+                genero=clean['genero'],
+                foto=request.FILES['foto'],
+            )
+
+            funcionario.save()
+
+            adm = Administrador(funcionario=funcionario)
+            adm.save()
+
+            messages.success(request,
+                             'Administrador %s adicionado com sucesso!' \
+                                 % adm.funcionario.nome_completo)
+
+            return HttpResponseRedirect(self.success_url)
+
+        return render(request, self.template_name, {'form': form})
