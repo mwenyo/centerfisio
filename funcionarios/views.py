@@ -5,7 +5,6 @@ from django.views.generic import TemplateView
 from django.views.generic.base import View
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.models import User
