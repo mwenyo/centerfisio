@@ -16,7 +16,6 @@ from .forms import FisioterapeutaCreateForm, FisioterapeutaUpdateForm
 from .forms import EsteticistaCreateForm, EsteticistaUpdateForm
 from .forms import InstrutorCreateForm, InstrutorUpdateForm
 
-
 class HomeView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView): # pylint: disable=too-many-ancestors,line-too-long
     """View da HomePage"""
     model = Funcionario
@@ -493,6 +492,164 @@ class EsteticistaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, View): 
             esteticista.cursos = clean['cursos']
 
             esteticista.save(update_fields={'cursos'})
+
+            messages.success(request, 'Dados alterados com sucesso!')
+
+            return HttpResponseRedirect(self.success_url)
+
+        return render(request, self.template_name, {'form': form})
+
+class InstrutorCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):  # pylint: disable=too-many-ancestors,line-too-long
+    """Adicionar Funcionarios Instrutor de Pilatas"""
+    template_name = 'funcionarios/instrutor_form.html'
+    success_message = "Instrutor de Pilatas adicionado!"
+    success_url = reverse_lazy('funcionarios:funcionario_lista')
+    login_url = reverse_lazy('admin:login')
+    permission_required = {'funcionarios.add_funcionario',
+                           'funcionarios.add_instrutor'}
+
+    def get(self, request, *args, **kwargs):
+        """GET"""
+        return render(request, self.template_name, {'form': InstrutorCreateForm})
+
+    def post(self, request, *args, **kwargs):
+        """POST"""
+        form = InstrutorCreateForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            clean = form.cleaned_data
+            usuario = User(
+                username=clean['nome_usuario'],
+                first_name=clean['nome'],
+                last_name=clean['sobrenome'],
+                password='vai mudar',
+                email=clean['email'],
+                is_staff=True,
+            )
+            usuario.set_password(clean['senha'])
+            usuario.save()
+
+            funcionario = Funcionario(
+                usuario=usuario,
+                cpf=clean['cpf'],
+                nascimento=clean['nascimento'],
+                contratacao=clean['contratacao'],
+                telefone1=clean['telefone1'],
+                telefone2=clean['telefone2'],
+                endereco=clean['endereco'],
+                complemento=clean['complemento'],
+                numero=clean['numero'],
+                bairro=clean['bairro'],
+                cidade=clean['cidade'],
+                uf=clean['uf'],
+                estado_civil=clean['estado_civil'],
+                genero=clean['genero'],
+                foto=request.FILES['foto'],
+            )
+
+            funcionario.save()
+
+            instrutor = Instrutor(
+                funcionario=funcionario,
+                crefito=clean['conselho'],
+                especializacao=clean['registro'],
+                cursos=clean['cursos']
+            )
+            instrutor.save()
+
+            messages.success(request,
+                             'Instrutor de Pilates %s adicionado com sucesso!'
+                             % instrutor.funcionario.nome_completo)
+
+            return HttpResponseRedirect(self.success_url)
+
+        return render(request, self.template_name, {'form': form})
+
+class InstrutorUpdateView(LoginRequiredMixin, PermissionRequiredMixin, View):  # pylint: disable=too-many-ancestors,line-too-long
+    """Adicionar Funcionarios Instrutores de Pilates"""
+    template_name = 'funcionarios/instrutor_form.html'
+    success_message = "Instrutores de Pilates adicionado!"
+    success_url = reverse_lazy('funcionarios:funcionario_lista')
+    login_url = reverse_lazy('admin:login')
+    permission_required = {'funcionarios.change_funcionario',
+                           'funcionarios.change_instrutor'}
+
+    def get(self, request, *args, **kwargs):
+        """GET"""
+        instrutor = Instrutor.objects.get(id=kwargs['pk'])
+        dados = {
+            'nome_usuario': instrutor.funcionario.usuario.username,
+            'email': instrutor.funcionario.usuario.email,
+            'nome': instrutor.funcionario.usuario.first_name,
+            'sobrenome': instrutor.funcionario.usuario.last_name,
+            'cpf': instrutor.funcionario.cpf,
+            'nascimento': instrutor.funcionario.nascimento,
+            'contratacao': instrutor.funcionario.contratacao,
+            'telefone1': instrutor.funcionario.telefone1,
+            'telefone2': instrutor.funcionario.telefone2,
+            'endereco': instrutor.funcionario.endereco,
+            'complemento': instrutor.funcionario.complemento,
+            'numero': instrutor.funcionario.numero,
+            'bairro': instrutor.funcionario.bairro,
+            'cidade': instrutor.funcionario.cidade,
+            'uf': instrutor.funcionario.uf,
+            'estado_civil': instrutor.funcionario.estado_civil,
+            'genero': instrutor.funcionario.genero,
+            'conselho': instrutor.conselho,
+            'registro': instrutor.registro,
+            'cursos': instrutor.cursos,
+        }
+        formulario = InstrutorUpdateForm(initial=dados)
+        context = {
+            'object': instrutor,
+            'form': formulario
+        }
+        print(formulario)
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        """POST"""
+        instrutor = Instrutor.objects.get(id=kwargs['pk'])
+        form = InstrutorUpdateForm(request.POST or None)
+        if form.is_valid():
+
+            clean = form.cleaned_data
+
+            instrutor.funcionario.usuario.username = clean['nome_usuario']
+            instrutor.funcionario.usuario.first_name = clean['nome']
+            instrutor.funcionario.usuario.last_name = clean['sobrenome']
+            instrutor.funcionario.usuario.email = clean['email']
+
+            instrutor.funcionario.usuario.save(update_fields=[
+                'username', 'first_name', 'last_name', 'email',
+            ])
+
+            instrutor.funcionario.cpf = clean['cpf']
+            instrutor.funcionario.nascimento = clean['nascimento']
+            instrutor.funcionario.contratacao = clean['contratacao']
+            instrutor.funcionario.telefone1 = clean['telefone1']
+            instrutor.funcionario.telefone2 = clean['telefone2']
+            instrutor.funcionario.endereco = clean['endereco']
+            instrutor.funcionario.complemento = clean['complemento']
+            instrutor.funcionario.numero = clean['numero']
+            instrutor.funcionario.bairro = clean['bairro']
+            instrutor.funcionario.cidade = clean['cidade']
+            instrutor.funcionario.uf = clean['uf']
+            instrutor.funcionario.estado_civil = clean['estado_civil']
+            instrutor.funcionario.genero = clean['genero']
+
+            instrutor.funcionario.save(update_fields=[
+                'cpf', 'nascimento', 'contratacao', 'telefone1', 'telefone2',
+                'endereco', 'complemento', 'numero', 'bairro', 'cidade',
+                'uf', 'estado_civil', 'genero',
+            ])
+
+            instrutor.conselho = clean['conselho']
+            instrutor.registro = clean['registro']
+            instrutor.cursos = clean['cursos']
+
+            instrutor.save(update_fields={
+                'conselho', 'registro', 'cursos'
+            })
 
             messages.success(request, 'Dados alterados com sucesso!')
 

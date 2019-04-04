@@ -1,6 +1,6 @@
 """Forms - Funcionários"""
 from django import forms
-from .models import Funcionario
+from .models import Funcionario, Instrutor
 
 
 class FuncionarioCreateForm(forms.ModelForm):
@@ -185,26 +185,28 @@ class EsteticistaUpdateForm(FuncionarioUpdateForm):
 
 class InstrutorCreateForm(FuncionarioCreateForm):
     """FisioterapeutaForm definition."""
-    conselho = forms.CharField(required=True,
-                               widget=forms.Select(
-                                   attrs={'class': 'form-control'})
-                               )
+    conselho = forms.ChoiceField(required=True,
+                                 choices=Instrutor.CONSELHO_CHOICE,
+                                 widget=forms.Select(
+                                     attrs={'class': 'form-control'})
+                                )
 
     registro = forms.CharField(
-        widget=forms.Select(attrs={'class': 'form-control'}))
+        widget=forms.TextInput(attrs={'class': 'form-control input'}))
 
     cursos = forms.CharField(widget=forms.Textarea(
         attrs={'class': 'form-control'}))
 
 class InstrutorUpdateForm(FuncionarioUpdateForm):
     """FisioterapeutaForm definition."""
-    conselho = forms.CharField(required=True,
-                               widget=forms.Select(
-                                   attrs={'class': 'form-control'})
-                               )
+    conselho = forms.ChoiceField(required=True,
+                                 choices=Instrutor.CONSELHO_CHOICE,
+                                 widget=forms.Select(
+                                     attrs={'class': 'form-control'})
+                                )
 
     registro = forms.CharField(
-        widget=forms.Select(attrs={'class': 'form-control'}))
+        widget=forms.TextInput(attrs={'class': 'form-control input'}))
 
     cursos = forms.CharField(widget=forms.Textarea(
         attrs={'class': 'form-control'}))

@@ -5,7 +5,7 @@ from .views import HomeView, FuncionarioView, FuncionarioDeleteView
 from .views import AdministradorCreateView, AdministradorUpdateView
 from .views import FisioterapeutaCreateView, FisioterapeutaUpdateView
 from .views import EsteticistaCreateView, EsteticistaUpdateView
-#from .views import InstrutorCreateView, InstrutorUpdateView
+from .views import InstrutorCreateView, InstrutorUpdateView
 
 app_name = 'funcionarios'
 
@@ -29,9 +29,9 @@ urlpatterns = [
             name="funcionario_estet_adicionar"),
     path('funcionarios/esteticistas/<int:pk>/editar', EsteticistaUpdateView.as_view(), \
         name="funcionario_estet_editar"),
+
+    path('funcionarios/instrutores/adicionar', InstrutorCreateView.as_view(),\
+            name="funcionario_intru_adicionar"),
+    path('funcionarios/instrutores/<int:pk>/editar', InstrutorUpdateView.as_view(), \
+        name="funcionario_intru_editar")
 ]
-"""
-path('funcionarios/instrutores/adicionar', InstrutorCreateView.as_view(),\
-        name="funcionario_intru_adicionar"),
-path('funcionarios/instrutores/<int:pk>/editar', InstrutorUpdateView.as_view(), \
-    name="funcionario_intru_editar"),"""

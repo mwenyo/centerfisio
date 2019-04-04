@@ -167,7 +167,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                                 <a href="{% url 'funcionarios:funcionario_estet_adicionar' %}"><i class="fa fa-star"></i> Esteticista</a>
                                             </li>
                                             <li>
-                                                <a href="javascript:void(0);"><i class="fa fa-child"></i> Instrutor de
+                                                <a href="{% url 'funcionarios:funcionario_intru_adicionar' %}"><i class="fa fa-child"></i> Instrutor de
                                                     Pilates</a>
                                             </li>
                                         </ul>
@@ -198,7 +198,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                     <tbody>
                                         {% for administrador in administradores %}
                                         <tr>
-                                            <td><strong>{{ administrador.funcionario.nome_completo }}</strong></td>
+                                            <td><strong>{{ administrador.funcionario.nome_completo|truncatechars:25 }}</strong></td>
                                             <td class="text-center">{{ administrador.funcionario.nascimento }}</td>
                                             <td class="text-center">{{ administrador.funcionario.contratacao }}</td>
                                             <td class="text-center">{{ administrador.funcionario.telefone1 }}
@@ -243,7 +243,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                     <tbody>
                                         {% for esteticista in esteticistas %}
                                         <tr>
-                                            <td><strong>{{ esteticista.funcionario.nome_completo }}</strong></td>
+                                            <td><strong>{{ esteticista.funcionario.nome_completo|truncatechars:25 }}</strong></td>
                                             <td class="text-center">{{ esteticista.funcionario.nascimento }}</td>
                                             <td class="text-center">{{ esteticista.funcionario.contratacao }}</td>
                                             <td class="text-center">{{ esteticista.cursos|truncatechars:20 }}
@@ -293,7 +293,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                     <tbody>
                                         {% for instrutor in instrutores %}
                                         <tr>
-                                            <td><strong>{{ instrutor.funcionario.nome_completo }}</strong></td>
+                                            <td><strong>{{ instrutor.funcionario.nome_completo|truncatechars:25 }}</strong></td>
                                             <td class="text-center">{{ instrutor.funcionario.nascimento }}</td>
                                             <td class="text-center">{{ instrutor.funcionario.contratacao }}</td>
                                             <td class="text-center">{{ instrutor.conselho }}: {{ instrutor.registro }}
@@ -306,7 +306,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                                 {% endif %}
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
+                                                <a href="{% url 'funcionarios:funcionario_intru_editar' instrutor.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
                                                     Editar</a>
                                                 <a href="{% url 'funcionarios:funcionario_deletar' instrutor.funcionario.usuario.id %}" class="btn btn-sm btn-danger deletar"><i
                                                         class="fa fa-trash-o"></i> Excluir</a>
@@ -348,7 +348,7 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                     <tbody>
                                         {% for fisioterapeuta in fisioterapeutas %}
                                         <tr>
-                                            <td><strong>{{ fisioterapeuta.funcionario.nome_completo }}</strong></td>
+                                            <td><strong>{{ fisioterapeuta.funcionario.nome_completo|truncatechars:25 }}</strong></td>
                                             <td class="text-center">{{ fisioterapeuta.funcionario.nascimento }}</td>
                                             <td class="text-center">{{ fisioterapeuta.funcionario.contratacao }}</td>
                                             <td class="text-center">{{ fisioterapeuta.crefito }}
