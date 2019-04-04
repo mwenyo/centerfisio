@@ -156,15 +156,15 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                         </button>
                                         <ul class="dropdown-menu pull-right">
                                             <li>
-                                                <a href="{% url 'funcionarios:funcionarios_admin_adicionar' %}"><i class="fa fa-user"></i>
+                                                <a href="{% url 'funcionarios:funcionario_admin_adicionar' %}"><i class="fa fa-user"></i>
                                                     Administrador</a>
                                             </li>
                                             <li>
-                                                <a href="javascript:void(0);"><i class="fa fa-wheelchair"></i>
+                                                <a href="{% url 'funcionarios:funcionario_fisio_adicionar' %}"><i class="fa fa-wheelchair"></i>
                                                     Fisioterapêuta</a>
                                             </li>
                                             <li>
-                                                <a href="javascript:void(0);"><i class="fa fa-star"></i> Esteticista</a>
+                                                <a href="{% url 'funcionarios:funcionario_estet_adicionar' %}"><i class="fa fa-star"></i> Esteticista</a>
                                             </li>
                                             <li>
                                                 <a href="javascript:void(0);"><i class="fa fa-child"></i> Instrutor de
@@ -207,9 +207,9 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                                 {% endif %}
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
+                                                <a href="{% url 'funcionarios:funcionario_admin_editar' administrador.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
                                                     Editar</a>
-                                                <a href="#" class="btn btn-sm btn-danger deletar"><i
+                                                <a href="{% url 'funcionarios:funcionario_deletar' administrador.funcionario.usuario.id %}" class="btn btn-sm btn-danger deletar"><i
                                                         class="fa fa-trash-o"></i> Excluir</a>
                                             </td>
                                         </tr>
@@ -254,9 +254,9 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                                 {% endif %}
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
+                                                <a href="{% url 'funcionarios:funcionario_estet_editar' esteticista.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
                                                     Editar</a>
-                                                <a href="#" class="btn btn-sm btn-danger deletar"><i
+                                                <a href="{% url 'funcionarios:funcionario_deletar' esteticista.funcionario.usuario.id %}" class="btn btn-sm btn-danger deletar"><i
                                                         class="fa fa-trash-o"></i> Excluir</a>
                                             </td>
                                         </tr>
@@ -291,24 +291,24 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                             Ações</th>
                                     </thead>
                                     <tbody>
-                                        {% for instrutore in instrutores %}
+                                        {% for instrutor in instrutores %}
                                         <tr>
-                                            <td><strong>{{ instrutore.funcionario.nome_completo }}</strong></td>
-                                            <td class="text-center">{{ instrutore.funcionario.nascimento }}</td>
-                                            <td class="text-center">{{ instrutore.funcionario.contratacao }}</td>
-                                            <td class="text-center">{{ instrutore.conselho }}: {{ instrutore.registro }}
+                                            <td><strong>{{ instrutor.funcionario.nome_completo }}</strong></td>
+                                            <td class="text-center">{{ instrutor.funcionario.nascimento }}</td>
+                                            <td class="text-center">{{ instrutor.funcionario.contratacao }}</td>
+                                            <td class="text-center">{{ instrutor.conselho }}: {{ instrutor.registro }}
                                             </td>
-                                            <td class="text-center">{{ instrutore.cursos|truncatechars:20 }}
+                                            <td class="text-center">{{ instrutor.cursos|truncatechars:20 }}
                                             </td>
-                                            <td class="text-center">{{ instrutore.funcionario.telefone1 }}
-                                                {% if instrutore.funcionario.telefone2 %} /
-                                                {{ instrutore.funcionario.telefone2 }}
+                                            <td class="text-center">{{ instrutor.funcionario.telefone1 }}
+                                                {% if instrutor.funcionario.telefone2 %} /
+                                                {{ instrutor.funcionario.telefone2 }}
                                                 {% endif %}
                                             </td>
                                             <td class="text-center">
                                                 <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
                                                     Editar</a>
-                                                <a href="#" class="btn btn-sm btn-danger deletar"><i
+                                                <a href="{% url 'funcionarios:funcionario_deletar' instrutor.funcionario.usuario.id %}" class="btn btn-sm btn-danger deletar"><i
                                                         class="fa fa-trash-o"></i> Excluir</a>
                                             </td>
                                         </tr>
@@ -363,9 +363,9 @@ Configuraçãoes <span> > Cadastros > Funcionários </span>
                                                 {% endif %}
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
+                                                <a href="{% url 'funcionarios:funcionario_fisio_editar' fisioterapeuta.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
                                                     Editar</a>
-                                                <a href="#" class="btn btn-sm btn-danger deletar"><i
+                                                <a href="{% url 'funcionarios:funcionario_deletar' fisioterapeuta.funcionario.usuario.id %}" class="btn btn-sm btn-danger deletar"><i
                                                         class="fa fa-trash-o"></i> Excluir</a>
                                             </td>
                                         </tr>

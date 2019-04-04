@@ -19,7 +19,11 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-production-plugins.min.css' %}">
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-production.min.css' %}">
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-skins.min.css' %}">
-
+	
+	{% block css %}
+		
+	{% endblock css %}
+		
 	<!-- We recommend you use "your_style.css" to override SmartAdmin
 		     specific styles this will also ensure you retrain your customization with each SmartAdmin update.
 		<link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->

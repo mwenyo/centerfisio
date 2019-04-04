@@ -1,11 +1,19 @@
 {% extends 'funcionarios/list.html' %}
 {% load static %}
 
+{% block css %}
+    <style>
+        .bootstrapWizard li {
+            width: 20% !important;
+        }
+    </style>
+{% endblock css %}
+    
 {% block breadcrumb %}
 <li>Configurações</li>
 <li>Cadastros</li>
 <li>Funcionários</li>
-<li>Administradores</li>
+<li>Fisioterapeutas</li>
 
 {% if object %}
 <li><strong>{{ object.funcionario.nome_completo }}</strong></li>
@@ -73,9 +81,9 @@
                     <h2>
 
                         {% if object %}
-                        Editar Administrador {{ object.funcionario.nome_completo }}
+                        Editar Fisioterapeuta {{ object.funcionario.nome_completo }}
                         {% else %}
-                        Adicionar Administrador
+                        Adicionar Fisioterapeuta
                         {% endif %}
 
                     </h2>
@@ -106,6 +114,10 @@
                                             </li>
                                             <li data-target="#step4">
                                                 <a href="#tab4" data-toggle="tab"> <span class="step">4</span> <span
+                                                        class="title">Dados Profissionais</span> </a>
+                                            </li>
+                                            <li data-target="#step5">
+                                                <a href="#tab5" data-toggle="tab"> <span class="step">5</span> <span
                                                         class="title">Conclusão</span> </a>
                                             </li>
                                         </ul>
@@ -365,9 +377,56 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane" id="tab4">
+                                        <div class="tab-pane active" id="tab4">
                                             <br>
-                                            <h3><strong>4ª Etapa</strong> - Salvar Dados</h3>
+                                            <h3><strong>4ª Etapa </strong> - Dados Profissionais</h3>
+
+                                            <div class="row">
+
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Registro CREFITO</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i
+                                                                    class="fa fa-slack fa-fw"></i></span>
+                                                            {{ form.crefito }}
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Especialização</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i
+                                                                    class="fa fa-mortar-board fa-fw"></i></span>
+                                                            {{ form.especializacao }}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Cursos</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i
+                                                                    class="fa fa-bank fa-fw"></i></span>
+                                                            {{ form.cursos }}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab5">
+                                            <br>
+                                            <h3><strong>5ª Etapa</strong> - Salvar Dados</h3>
                                             <br>
                                             <h1 class="text-center text-success"><strong><i
                                                         class="fa fa-check fa-lg"></i> Tudo OK!</strong></h1>
@@ -443,6 +502,10 @@
         var $validator = $("#wizard-1").validate({
 
             rules: {
+                nome_usuario: {
+                    required: true,
+                    minlength: 5,
+                },
                 email: {
                     required: true,
                     email: "Seu endereço de email deve ser no formato nome@dominio.com"
@@ -487,10 +550,18 @@
                 foto: {
                     required: true,
                     extension: "png|jpg|jpeg|bmp",
+                },
+                crefito: {
+                    required: true,
+                    minlength: 4,
                 }
             },
 
             messages: {
+                nome_usuario: {
+                    required: "Por favor, preencha o campo de Login",
+                    minlength: "Por favor, preencha com pelo menos 5 caracteres"
+                },
                 nome: {
                     required: "Por favor, preencha com seu nome",
                     minlength: "Por favor, preencha com pelo menos 5 caracteres"
@@ -524,6 +595,10 @@
                 foto: {
                     required: "Por favor, selecione um arquivo de seu computador",
                     extension: "Apenas arquivos no formato .png, .jpg, .jpeg e .bmp"
+                },
+                crefito: {
+                    required: "Por favor, preencha com seu registro do CREFITO",
+                    minlength: "Por favor, preencha com pelo menos 4 caracteres",
                 },
             },
 
@@ -561,10 +636,14 @@
                 }
             },
             "onTabShow": function (tab, navigation, index) {
-                if (index == 1)
+                if (index == 0)
+                    $('#id_nome_usuario').focus();
+                else if (index == 1)
                     $('#id_nome').focus();
                 else if (index == 2)
                     $('#id_endereco').focus();
+                else if (index == 3)
+                    $('#id_crefito').focus();
             },
             "onTabClick": function (tab, navigation, index) {
                 return false;

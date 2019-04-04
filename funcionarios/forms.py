@@ -1,9 +1,9 @@
 """Forms - Funcionários"""
 from django import forms
-from .models import Funcionario, Fisioterapeuta, Esteticista, Instrutor
+from .models import Funcionario
 
 
-class FuncionarioForm(forms.ModelForm):
+class FuncionarioCreateForm(forms.ModelForm):
     """FuncionarioForm definition."""
 
     nome_usuario = forms.CharField(max_length=150, required=True,
@@ -78,7 +78,7 @@ class FuncionarioForm(forms.ModelForm):
         }
 
     def clean(self):
-        cleaned_data = super(FuncionarioForm, self).clean()
+        cleaned_data = super(FuncionarioCreateForm, self).clean()
         password = cleaned_data.get("senha")
         confirm_password = cleaned_data.get("confirmar_senha")
 
@@ -87,31 +87,124 @@ class FuncionarioForm(forms.ModelForm):
                 "Senhas não conferem"
             )
 
+class FuncionarioUpdateForm(forms.ModelForm):
+    """FuncionarioForm definition."""
 
-class FisioterapeutaForm(forms.ModelForm):
+    nome_usuario = forms.CharField(max_length=150, required=True,
+                                   widget=forms.TextInput(
+                                       attrs={'class': 'form-control input'}))
+    email = forms.EmailField(required=True,
+                             widget=forms.EmailInput(
+                                 attrs={'class': 'form-control input'})
+                             )
+    nome = forms.CharField(max_length=30, required=True,
+                           widget=forms.TextInput(
+                               attrs={'class': 'form-control input'})
+                           )
+    sobrenome = forms.CharField(max_length=150, required=True,
+                                widget=forms.TextInput(
+                                    attrs={'class': 'form-control input'})
+                                )
+
+    class Meta:
+        model = Funcionario
+        fields = ('nome_usuario', 'email', 'nome', 'sobrenome',
+                  'cpf', 'nascimento', 'contratacao', 'telefone1',
+                  'telefone2', 'endereco', 'complemento',
+                  'numero', 'bairro', 'cidade', 'uf', 'estado_civil', 'genero',
+                  )
+        widgets = {
+            'cpf': forms.TextInput(attrs={'class': 'form-control input',
+                                          'data-mask': '999.999.999-99',
+                                          'data-mask-placeholder':'_'}),
+
+            'nascimento': forms.DateInput(attrs={'class': 'form-control input',
+                                                 'data-mask': '99/99/9999',
+                                                 'data-mask-placeholder':'_'}),
+
+            'contratacao': forms.DateInput(attrs={'class': 'form-control input',
+                                                  'data-mask': '99/99/9999',
+                                                  'data-mask-placeholder':'_'}),
+
+            'telefone1': forms.TextInput(attrs={'class': 'form-control input',
+                                                'data-mask': '(99) 9999-9999',
+                                                'data-mask-placeholder':'_'}),
+
+            'telefone2': forms.TextInput(attrs={'class': 'form-control input',
+                                                'data-mask': '(99) 9999-9999',
+                                                'data-mask-placeholder':'_'}),
+
+            'estado_civil': forms.Select(attrs={'class': 'form-control'}),
+
+            'genero': forms.Select(attrs={'class': 'form-control'}),
+
+            'endereco': forms.TextInput(attrs={'class': 'form-control input'}),
+
+            'complemento': forms.TextInput(attrs={'class': 'form-control input'}),
+
+            'numero': forms.NumberInput(attrs={'class': 'form-control input'}),
+
+            'bairro': forms.TextInput(attrs={'class': 'form-control input'}),
+
+            'cidade': forms.TextInput(attrs={'class': 'form-control input'}),
+
+            'uf': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class FisioterapeutaCreateForm(FuncionarioCreateForm):
     """FisioterapeutaForm definition."""
-    class Meta:
-        """Meta definition for Esteticistaform."""
+    crefito = forms.CharField(max_length=150,
+                              required=True,
+                              widget=forms.TextInput(attrs={'class': 'form-control input'})
+                             )
 
-        model = Fisioterapeuta
-        fields = ('crefito', 'especializacao', 'cursos',)
+    especializacao = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
 
+    cursos = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
 
-class EsteticistaForm(forms.ModelForm):
-    """Form definition for Esteticista."""
+class FisioterapeutaUpdateForm(FuncionarioUpdateForm):
+    """FisioterapeutaForm definition."""
+    crefito = forms.CharField(max_length=150,
+                              required=True,
+                              widget=forms.TextInput(attrs={'class': 'form-control input'})
+                             )
 
-    class Meta:
-        """Meta definition for Esteticistaform."""
+    especializacao = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
 
-        model = Esteticista
-        fields = ('cursos',)
+    cursos = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
 
+class EsteticistaCreateForm(FuncionarioCreateForm):
+    """FisioterapeutaForm definition."""
 
-class InstrutorForm(forms.ModelForm):
-    """Form definition for Instrutor."""
+    cursos = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
 
-    class Meta:
-        """Meta definition for Instrutorform."""
+class EsteticistaUpdateForm(FuncionarioUpdateForm):
+    """FisioterapeutaForm definition."""
 
-        model = Instrutor
-        fields = ('conselho', 'registro', 'cursos',)
+    cursos = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
+
+class InstrutorCreateForm(FuncionarioCreateForm):
+    """FisioterapeutaForm definition."""
+    conselho = forms.CharField(required=True,
+                               widget=forms.Select(
+                                   attrs={'class': 'form-control'})
+                               )
+
+    registro = forms.CharField(
+        widget=forms.Select(attrs={'class': 'form-control'}))
+
+    cursos = forms.CharField(widget=forms.Textarea(
+        attrs={'class': 'form-control'}))
+
+class InstrutorUpdateForm(FuncionarioUpdateForm):
+    """FisioterapeutaForm definition."""
+    conselho = forms.CharField(required=True,
+                               widget=forms.Select(
+                                   attrs={'class': 'form-control'})
+                               )
+
+    registro = forms.CharField(
+        widget=forms.Select(attrs={'class': 'form-control'}))
+
+    cursos = forms.CharField(widget=forms.Textarea(
+        attrs={'class': 'form-control'}))
