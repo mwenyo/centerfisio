@@ -5,7 +5,8 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from .models import Convenio, Procedimento
+from .forms import PacoteForm
+from .models import Convenio, Procedimento, Pacote
 
 class ConvenioView(LoginRequiredMixin, PermissionRequiredMixin, ListView): # pylint: disable=too-many-ancestors
     """Lista de Convenios"""
@@ -86,3 +87,49 @@ class ProcedimentoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Succes
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(ProcedimentoDeleteView, self).delete(request, *args, **kwargs)
+
+
+class PacoteView(LoginRequiredMixin, PermissionRequiredMixin, ListView):  # pylint: disable=too-many-ancestors
+    """Lista de Pacotes"""
+    model = Pacote
+    template_name = "clinica/pacote/list.html"
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'clinica.view_pacote'
+
+
+class PacoteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, UpdateView):  # pylint: disable=too-many-ancestors,line-too-long
+    """Editar Pacotes"""
+    model = Pacote
+    form_class = PacoteForm
+    #fields = ['nome', 'descricao', 'valor', 'promocao', 'inicio', 'termino', 'status', ]
+    template_name = "clinica/pacote/form.html"
+    success_message = "Alteração realizada com sucesso!"
+    success_url = reverse_lazy('clinica:pacote_lista')
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'clinica.change_pacote'
+
+
+class PacoteCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):  # pylint: disable=too-many-ancestors,line-too-long
+    """Adicionar Pacotes"""
+    model = Pacote
+    form_class = PacoteForm
+    #fields = ['nome', 'descricao', 'valor', 'promocao', 'inicio', 'termino', 'status', ]
+    template_name = "clinica/pacote/form.html"
+    success_message = "Pacote adicionado!"
+    success_url = reverse_lazy('clinica:pacote_lista')
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'clinica.add_pacote'
+
+
+class PacoteDeleteView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, DeleteView):  # pylint: disable=too-many-ancestors,line-too-long
+    """Excluir Pacotes"""
+    model = Pacote
+    template_name = "clinica/pacote/delete.html"
+    success_message = "Pacote excluído!"
+    success_url = reverse_lazy('clinica:pacote_lista')
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'clinica.delete_pacote'
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(PacoteDeleteView, self).delete(request, *args, **kwargs)

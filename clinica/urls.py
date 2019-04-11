@@ -3,6 +3,7 @@ from django.urls import path
 from .views import ConvenioView, ConvenioUpdateView, ConvenioCreateView, ConvenioDeleteView
 from .views import ProcedimentoView, ProcedimentoCreateView, \
     ProcedimentoUpdateView, ProcedimentoDeleteView
+from .views import PacoteView, PacoteCreateView, PacoteDeleteView, PacoteUpdateView
 
 app_name = 'clinica'
 
@@ -19,4 +20,12 @@ urlpatterns = [
         name="procedimento_editar"),
     path('procedimentos/<int:pk>/deletar', ProcedimentoDeleteView.as_view(), \
         name="procedimento_deletar"),
+
+    path('pacotes/', PacoteView.as_view(), name="pacote_lista"),
+    path('pacotes/adicionar', PacoteCreateView.as_view(),
+         name="pacote_adicionar"),
+    path('pacotes/<int:pk>/editar',
+         PacoteUpdateView.as_view(), name="pacote_editar"),
+    path('pacotes/<int:pk>/deletar',
+         PacoteDeleteView.as_view(), name="pacote_deletar"),
 ]
