@@ -58,7 +58,7 @@ class Pacote(models.Model):
         auto_now=False, auto_now_add=False, null=True, blank=True)
     termino = models.DateField("Data Final", \
         auto_now=False, auto_now_add=False, null=True, blank=True)
-    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES)
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=1)
     procedimentos = models.ManyToManyField(Procedimento, through='PacoteProcedimento')
 
     def __str__(self):

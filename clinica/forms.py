@@ -9,13 +9,13 @@ class PacoteForm(forms.ModelForm):
         """Meta definition for Pacoteform."""
 
         model = Pacote
-        fields = ('nome', 'descricao', 'valor', 'promocao', 'inicio', 'termino', 'status')
+        fields = ('tipo', 'nome', 'descricao', 'valor', 'promocao', 'inicio', 'termino', 'status')
         widgets = {
             'promocao': forms.CheckboxInput(attrs={'onclick':'teste2(this)'})
         }
 
     def clean(self):
         cleaned_data = super(PacoteForm, self).clean()
-        if not cleaned_data().get("promocao"):
+        if not cleaned_data.get("promocao"):
             cleaned_data["inicio"] = None
             cleaned_data["termino"] = None

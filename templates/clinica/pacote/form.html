@@ -87,18 +87,25 @@
                             <form action="" method="POST" class="smart-form">{% csrf_token %}
                                 <fieldset>
                                     <div class="row">
-                                        <section class="col col-6">
+                                        <section class="col col-4">
                                             <label class="label">Nome do Pacote</label>
                                             <label class="input">
                                                 <i class="icon-append fa fa-dropbox"></i>
                                                 {{ form.nome }}
                                             </label>
                                         </section>
-                                        <section class="col col-6">
+                                        <section class="col col-4">
                                             <label class="label">Valor</label>
                                             <label class="input">
                                                 <i class="icon-append fa fa-money"></i>
                                                 {{ form.valor }}
+                                            </label>
+                                        </section>
+                                        <section class="col col-4">
+                                            <label class="label">Tipo</label>
+                                            <label class="select">
+                                                {{ form.tipo }}
+                                                <i></i>
                                             </label>
                                         </section>
                                     </div>
@@ -190,20 +197,20 @@
         }).on("change", function () {
             to.datepicker("option", "minDate", getDate(this));
         }),
-        to = $('#id_termino').datepicker({
-            dateFormat: dateFormat,
-            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            nextText: 'Proximo',
-            prevText: 'Anterior',
-            changeMonth: true,
-            numberOfMonths: 2,
-        }).on("change", function () {
-            from.datepicker("option", "maxDate", getDate(this));
-        });
+            to = $('#id_termino').datepicker({
+                dateFormat: dateFormat,
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior',
+                changeMonth: true,
+                numberOfMonths: 2,
+            }).on("change", function () {
+                from.datepicker("option", "maxDate", getDate(this));
+            });
 
         function getDate(element) {
             var date;
@@ -215,12 +222,18 @@
 
             return date;
         }
-        document.getElementById('lblInicio').classList.add("state-disabled");
-        document.getElementById('lbltermino').classList.add("state-disabled");
-        document.getElementById('id_inicio').disabled = true;
-        document.getElementById('id_termino').disabled = true;
     });
 </script>
+
+{% if not object %}
+<script>
+    document.getElementById('lblInicio').classList.add("state-disabled");
+    document.getElementById('lbltermino').classList.add("state-disabled");
+    document.getElementById('id_inicio').disabled = true;
+    document.getElementById('id_termino').disabled = true;
+</script>
+{% endif %}
+
 <script language="javascript">
     function teste2(obj) {
         if (obj.checked == true) {

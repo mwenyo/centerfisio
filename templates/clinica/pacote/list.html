@@ -175,13 +175,17 @@ Configuraçãoes <span> > Cadastros > Pacotes </span>
                                 <tbody>
                                     {% for pacote in object_list %}
                                     <tr>
-                                        <td><strong>{{ pacote.nome }}</strong></td>
+                                        <td>
+                                            <a href="{% url 'clinica:pacote_detalhes' pacote.id %}" class="">
+                                                <strong>{{ pacote.nome }}</strong>
+                                            </a>
+                                        </td>
                                         <td><strong>{{ pacote.desceicao }}</strong></td>
                                         <td class="text-center"><strong>R$ {{ pacote.valor }}</strong></td>
                                         <td class="text-center"><strong>{% if pacote.promocao == 1 %}
-                                                <i class="fa fa-lg fa-2x fa-check"></i>
+                                                <i class="text-success fa fa-lg fa-2x fa-check"></i>
                                                 {% else %}
-                                                <i class="fa fa-lg fa-2x fa-times"></i>
+                                                <i class="text-danger fa fa-lg fa-2x fa-times"></i>
                                                 {% endif %}</strong></td>
                                         <td class="text-center"><strong>{% if not pacote.inicio %}
                                                 ---
@@ -195,17 +199,20 @@ Configuraçãoes <span> > Cadastros > Pacotes </span>
                                                 {% endif %}</strong></td>
                                         <td class="text-center">
                                             {% if pacote.status == 1 %}
-                                            <i class="fa fa-lg fa-2x fa-check"></i>
+                                            <i class="text-success fa fa-lg fa-2x fa-check"></i>
                                             {% else %}
-                                            <i class="fa fa-lg fa-2x fa-times"></i>
+                                            <i class="text-danger fa fa-lg fa-2x fa-times"></i>
                                             {% endif %}
                                         </td>
                                         <td class="text-center">
                                             <a href="{% url 'clinica:pacote_editar' pacote.id %}"
-                                                class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Editar</a>
+                                                class="btn btn-sm btn-primary">
+                                                <i class="fa fa-edit"></i> Editar
+                                            </a>
                                             <a href="{% url 'clinica:pacote_deletar' pacote.id %}"
-                                                class="btn btn-sm btn-danger deletar" rel="{{ pacote.id }}" rel2=""><i
-                                                    class="fa fa-trash-o"></i> Excluir</a>
+                                                class="btn btn-sm btn-danger deletar" rel="{{ pacote.id }}" rel2="">
+                                                <i class="fa fa-trash-o"></i> Excluir
+                                            </a>
                                         </td>
                                     </tr>
                                     {% endfor %}

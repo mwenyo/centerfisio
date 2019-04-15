@@ -1,6 +1,6 @@
 """Views Clínica"""
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
@@ -133,3 +133,8 @@ class PacoteDeleteView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessa
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(PacoteDeleteView, self).delete(request, *args, **kwargs)
+
+
+class PacoteDetailView(DetailView):
+    model = Pacote
+    template_name = "clinica/pacote/detail.html"

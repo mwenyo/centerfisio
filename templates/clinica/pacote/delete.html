@@ -1,16 +1,16 @@
-{% extends 'clinica/convenio/list.html' %}
+{% extends 'clinica/pacote/list.html' %}
 {% load static %}
 
 {% block breadcrumb %}
     <li>Configurações</li>
     <li>Cadastros</li>
-    <li><strong>Convênios</strong></li>
+    <li><strong>Pacotes</strong></li>
 {% endblock breadcrumb %}
 
 
 {% block cabecalho %}
     <i class="fa-fw fa fa-cog"></i>
-    Configuraçãoes <span> > Cadastros > Convênios </span>
+    Configuraçãoes <span> > Cadastros > Pacotes </span>
 {% endblock cabecalho %}
     
 
@@ -32,11 +32,11 @@
                     <div class="alert alert-block alert-warning alert-dismissible" role="alert">
                             <a class="close" data-dismiss="alert" href="#">×</a>
                         <h3 class="alert-heading">Cuidado!</h3>
-                        <h4>Tem certeza que deseja excluir o convênio <strong>{{ object }}</strong>?</h4>
+                        <h4>Tem certeza que deseja excluir o pacote <strong>{{ object }}</strong>?</h4>
                         <p class="text-align-left">
                             <br>
                             <input type="submit" value="Confirmar" class="btn btn-warning">
-                            <a href="{% url 'clinica:convenio_lista' %}" class="btn btn-default  ">Voltar</a>
+                            <a href="{% url 'clinica:pacote_lista' %}" class="btn btn-default  ">Voltar</a>
                         </p>
                     </div>
                 </form>

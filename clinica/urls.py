@@ -1,9 +1,10 @@
 """URLs Clinica"""
 from django.urls import path
 from .views import ConvenioView, ConvenioUpdateView, ConvenioCreateView, ConvenioDeleteView
-from .views import ProcedimentoView, ProcedimentoCreateView, \
-    ProcedimentoUpdateView, ProcedimentoDeleteView
-from .views import PacoteView, PacoteCreateView, PacoteDeleteView, PacoteUpdateView
+from .views import ProcedimentoView, ProcedimentoCreateView
+from .views import ProcedimentoUpdateView, ProcedimentoDeleteView
+from .views import PacoteView, PacoteCreateView, PacoteDeleteView
+from .views import PacoteUpdateView, PacoteDetailView
 
 app_name = 'clinica'
 
@@ -28,4 +29,6 @@ urlpatterns = [
          PacoteUpdateView.as_view(), name="pacote_editar"),
     path('pacotes/<int:pk>/deletar',
          PacoteDeleteView.as_view(), name="pacote_deletar"),
+    path('pacotes/<int:pk>/detalhes',
+         PacoteDetailView.as_view(), name="pacote_detalhes"),
 ]
