@@ -129,7 +129,7 @@ Configuraçãoes <span> > Cadastros > Pacotes </span>
                                         Procedimentos </span></a>
                             </li>
                             <li>
-                                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-sliders"></i> <span
+                                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-info-circle"></i> <span
                                         class="hidden-mobile hidden-tablet"> Detalhes </span></a>
                             </li>
                         </ul>
@@ -171,9 +171,12 @@ Configuraçãoes <span> > Cadastros > Pacotes </span>
                                             <td><strong>{{ item.procedimento.tipo }}</strong></td>
                                             <td><strong>{{ item.procedimento.descricao|truncatechars:40 }}</strong></td>
                                             <td class="text-center">
-                                                <a href="" class="btn btn-sm btn-danger deletar">
-                                                    <i class="fa fa-trash-o"></i> Excluir
-                                                </a>
+                                                <form method="POST" action="{% url 'clinica:pacote_procedimento_deletar' item.pk %}" class="removerProcedimento" rel="{{ item.procedimento }}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-sm btn-danger deletar">
+                                                        <i class="fa fa-trash-o"></i> Remover
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -226,6 +229,16 @@ Configuraçãoes <span> > Cadastros > Pacotes </span>
                 $(this).DataTable().columns.adjust().responsive.recalc();
             });
         });
+
+        $('.removerProcedimento').submit(function(e){
+            e.preventDefault();
+            var txt = "Excluir o procedimento " + $(this).attr('rel'); + "?"
+            if (confirm(txt)){
+                $(this).unbind("submit");
+                $(this).submit();
+            }
+        });
+
     });
 
 </script>
