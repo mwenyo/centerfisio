@@ -4,7 +4,8 @@ from .views import ConvenioView, ConvenioUpdateView, ConvenioCreateView, Conveni
 from .views import ProcedimentoView, ProcedimentoCreateView
 from .views import ProcedimentoUpdateView, ProcedimentoDeleteView
 from .views import PacoteView, PacoteCreateView, PacoteDeleteView
-from .views import PacoteUpdateView, PacoteDetailView, PacoteProcedimentoDeleteView
+from .views import PacoteUpdateView, PacoteDetailView
+from .views import PacoteProcedimentoDeleteView, PacoteProcedimentoCreateView
 
 app_name = 'clinica'
 
@@ -31,6 +32,8 @@ urlpatterns = [
          PacoteDeleteView.as_view(), name="pacote_deletar"),
     path('pacotes/<int:pk>/procedimento_deletar',
          PacoteProcedimentoDeleteView.as_view(), name="pacote_procedimento_deletar"),
+    path('pacotes/<int:pk>/procedimento_adicionar',
+         PacoteProcedimentoCreateView.as_view(), name="pacote_procedimento_adicionar"),
     path('pacotes/<int:pk>/detalhes',
          PacoteDetailView.as_view(), name="pacote_detalhes"),
 ]

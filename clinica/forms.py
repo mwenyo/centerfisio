@@ -1,6 +1,7 @@
 """Forms - Clínica"""
 from django import forms
-from .models import Pacote
+from .models import Pacote, PacoteProcedimento
+
 
 class PacoteForm(forms.ModelForm):
     """Form definition for Pacote."""
@@ -9,9 +10,10 @@ class PacoteForm(forms.ModelForm):
         """Meta definition for Pacoteform."""
 
         model = Pacote
-        fields = ('tipo', 'nome', 'descricao', 'valor', 'promocao', 'inicio', 'termino', 'status')
+        fields = ('tipo', 'nome', 'descricao', 'valor',
+                  'promocao', 'inicio', 'termino', 'status')
         widgets = {
-            'promocao': forms.CheckboxInput(attrs={'onclick':'teste2(this)'})
+            'promocao': forms.CheckboxInput(attrs={'onclick': 'teste2(this)'})
         }
 
     def clean(self):

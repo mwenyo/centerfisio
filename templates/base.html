@@ -16,14 +16,15 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/font-awesome.min.css' %}">
 
 	<!-- SmartAdmin Styles : Caution! DO NOT change the order -->
-	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-production-plugins.min.css' %}">
+	<link rel="stylesheet" type="text/css" media="screen"
+		href="{% static 'css/smartadmin-production-plugins.min.css' %}">
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-production.min.css' %}">
 	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/smartadmin-skins.min.css' %}">
-	
+
 	{% block css %}
-		
+
 	{% endblock css %}
-		
+
 	<!-- We recommend you use "your_style.css" to override SmartAdmin
 		     specific styles this will also ensure you retrain your customization with each SmartAdmin update.
 		<link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
@@ -108,7 +109,7 @@
 		<div id="logo-group">
 
 			<!-- PLACE YOUR LOGO HERE -->
-			<span id="logo"> <img src="{% static 'img/logo-blue.png' %}" alt="SmartAdmin"> </span>
+			<span id="logo"> <img src="{% static 'img/logo-blue.png' %}" alt="Centerfisio Borges"> </span>
 			<!-- END LOGO PLACEHOLDER -->
 		</div>
 
@@ -128,32 +129,24 @@
 			<ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
 				<li class="">
 					<a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
-						<img src="{% static 'img/avatars/sunny.png' %}" alt="John Doe" class="online" />
+						<img src="{{ user.funcionario.foto.url }}" alt="{{ user.funcionario.usuario.first_name }}"
+							class="online" />
 					</a>
 					<ul class="dropdown-menu pull-right">
 						<li>
 							<a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"><i
-									class="fa fa-cog"></i> Setting</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"> <i
-									class="fa fa-user"></i> <u>P</u>rofile</a>
+									class="fa fa-gears"></i> Administração do Site</a>
 						</li>
 						<li class="divider"></li>
 						<li>
 							<a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"
-								data-action="toggleShortcut"><i class="fa fa-arrow-down"></i> <u>S</u>hortcut</a>
+								data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Tela <u>C</u>heia</a>
 						</li>
 						<li class="divider"></li>
 						<li>
-							<a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"
-								data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Full <u>S</u>creen</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a href="/admin/logout/" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i
-									class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
+							<a href="/admin/logout/" class="padding-10 padding-top-5 padding-bottom-5"
+								data-action="userLogout"><i class="fa fa-sign-out fa-lg"></i>
+								<strong><u>S</u>air</strong></a>
 						</li>
 					</ul>
 				</li>
@@ -161,17 +154,25 @@
 
 			<!-- logout button -->
 			<div id="logout" class="btn-header transparent pull-right">
-				<span> <a href="/admin/logout/" title="Sign Out" data-action="userLogout"><i
-							class="fa fa-sign-out"></i></a> </span>
+				<span> <a href="/admin/logout/" title="Sair" data-action="userLogout"><i class="fa fa-sign-out"></i></a>
+				</span>
 			</div>
 			<!-- end logout button -->
 
 			<!-- fullscreen button -->
 			<div id="fullscreen" class="btn-header transparent pull-right">
-				<span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i
+				<span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Tela Cheia"><i
 							class="fa fa-arrows-alt"></i></a> </span>
 			</div>
-			<!-- end fullscreen button -->
+
+			<div class="btn-header transparent pull-right">
+				<span>
+					<a href="/admin/" title="Administração do Site">
+						<i class="fa fa-gears"></i>
+					</a>
+				</span>
+			</div>
+
 		</div>
 		<!-- end pulled right: nav area -->
 
@@ -225,28 +226,29 @@
 					</a>
 				</li>
 				<li id="nav-pacientes">
-					<a href="{% url 'pacientes:paciente_list' %}" title="Lista de Pacientes"><i class="fa fa-lg fa-fw fa-group"></i>
+					<a href="{% url 'pacientes:paciente_list' %}" title="Lista de Pacientes"><i
+							class="fa fa-lg fa-fw fa-group"></i>
 						<span class="menu-item-parent"> Pacientes</span>
 					</a>
 				</li>
 				<li id="nav-fisioterapia">
-					<a href="#" title="Pacientes de Fisioterapia"><i class="fa fa-lg fa-fw fa-wheelchair"></i> 
+					<a href="#" title="Pacientes de Fisioterapia"><i class="fa fa-lg fa-fw fa-wheelchair"></i>
 						<span class="menu-item-parent">Fisioterapia</span>
 					</a>
 				</li>
 				<li id="nav-estetica">
-					<a href="#" title="Pacientes de Estética"><i class="fa fa-lg fa-fw fa-star-o"></i> 
+					<a href="#" title="Pacientes de Estética"><i class="fa fa-lg fa-fw fa-star-o"></i>
 						<span class="menu-item-parent">Estética</span>
 					</a>
 				</li>
 				<li id="nav-pilates">
-					<a href="#" title="Turmas de Pilates"><i class="fa fa-lg fa-fw fa-child"></i> 
-					<span class="menu-item-parent">Pilates</span>
+					<a href="#" title="Turmas de Pilates"><i class="fa fa-lg fa-fw fa-child"></i>
+						<span class="menu-item-parent">Pilates</span>
 					</a>
 				</li>
 				<li id="nav-config">
-					<a href="#" title="Configurações"><i class="fa fa-lg fa-fw fa-gears"></i> 
-					<span class="menu-item-parent">Configurações</span>
+					<a href="#" title="Configurações"><i class="fa fa-lg fa-fw fa-gears"></i>
+						<span class="menu-item-parent">Configurações</span>
 					</a>
 					<ul>
 						<li>
@@ -268,7 +270,7 @@
 									</a>
 								</li>
 								<li>
-										<a href="{% url 'funcionarios:funcionario_lista' %}">
+									<a href="{% url 'funcionarios:funcionario_lista' %}">
 										<i class="fa fa-fw fa-user"></i> Funcionarios
 									</a>
 								</li>
@@ -276,7 +278,7 @@
 						</li>
 					</ul>
 				</li>
-			
+
 			</ul>
 			{% endblock navegacao %}
 		</nav>
@@ -286,24 +288,24 @@
 	</aside>
 	<!-- END NAVIGATION -->
 
-		<!-- MAIN PANEL -->
-		<div id="main" role="main">
+	<!-- MAIN PANEL -->
+	<div id="main" role="main">
 
-			<!-- RIBBON -->
-			<div id="ribbon">
+		<!-- RIBBON -->
+		<div id="ribbon">
 
-				<!-- breadcrumb -->
-				<ol class="breadcrumb">
-					<li>Início</li>
-					
-					{% block breadcrumb %}
-						
-					{% endblock breadcrumb %}
-						
-				</ol>
-				<!-- end breadcrumb -->
+			<!-- breadcrumb -->
+			<ol class="breadcrumb">
+				<li>Início</li>
 
-				<!-- You can also add more buttons to the
+				{% block breadcrumb %}
+
+				{% endblock breadcrumb %}
+
+			</ol>
+			<!-- end breadcrumb -->
+
+			<!-- You can also add more buttons to the
 				ribbon for further usability
 
 				Example below:
@@ -314,54 +316,54 @@
 				<span id="search" class="btn btn-ribbon" data-title="search"><i class="fa-search"></i> <span class="hidden-mobile">Search</span></span>
 				</span> -->
 
-			</div>
-			<!-- END RIBBON -->
-		
-			<!-- MAIN CONTENT -->
-			<div id="content">
-
-				<!-- row -->
-				<div class="row">
-					
-					<!-- col -->
-					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
-						<h1 class="page-title txt-color-blueDark">
-
-							<!-- PAGE HEADER -->
-							{% block cabecalho %}
-								<i class="fa-fw fa fa-home"></i>
-								Início <span>> 
-								{% if user.funcionario.fisioterapeuta %}
-									{% if user.funcionario.genero != 'f' %}
-										Bem-vindo Dr. {{ user.first_name }}!
-									{% else %}
-										Bem-vinda Dra. {{ user.first_name }}!
-									{% endif %}
-								{% else %}
-									{% if user.funcionario.genero != 'f' %}
-										Bem-vindo {{ user.funcionario }}!
-									{% else %}
-										Bem-vinda {{ user.funcionario }}!
-									{% endif %}
-								{% endif %}
-								</span>
-							{% endblock cabecalho %}
-						</h1>
-					</div>
-					<!-- end col -->
-					
-				</div>
-				<!-- end row -->
-				
-
-				{% block conteudo %}
-
-				{% endblock conteudo %}
-			</div>
-			<!-- END MAIN CONTENT -->
-
 		</div>
-		<!-- END MAIN PANEL -->
+		<!-- END RIBBON -->
+
+		<!-- MAIN CONTENT -->
+		<div id="content">
+
+			<!-- row -->
+			<div class="row">
+
+				<!-- col -->
+				<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
+					<h1 class="page-title txt-color-blueDark">
+
+						<!-- PAGE HEADER -->
+						{% block cabecalho %}
+						<i class="fa-fw fa fa-home"></i>
+						Início <span>>
+							{% if user.funcionario.fisioterapeuta %}
+							{% if user.funcionario.genero != 'f' %}
+							Bem-vindo Dr. {{ user.first_name }}!
+							{% else %}
+							Bem-vinda Dra. {{ user.first_name }}!
+							{% endif %}
+							{% else %}
+							{% if user.funcionario.genero != 'f' %}
+							Bem-vindo {{ user.funcionario }}!
+							{% else %}
+							Bem-vinda {{ user.funcionario }}!
+							{% endif %}
+							{% endif %}
+						</span>
+						{% endblock cabecalho %}
+					</h1>
+				</div>
+				<!-- end col -->
+
+			</div>
+			<!-- end row -->
+
+
+			{% block conteudo %}
+
+			{% endblock conteudo %}
+		</div>
+		<!-- END MAIN CONTENT -->
+
+	</div>
+	<!-- END MAIN PANEL -->
 
 	<!-- #PAGE FOOTER -->
 	<div class="page-footer">
@@ -412,8 +414,10 @@
 	<!-- BOOTSTRAP JS -->
 	<script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
 
+	<script src="{% static 'js/plugin/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
+
 	<!--[if IE 8]>
-			<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+		<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
 		<![endif]-->
 
 	<!-- MAIN APP JS FILE -->
@@ -423,26 +427,26 @@
 	<!-- SMART NOTIFICATIONS -->
 	<script src="{% static 'js/notification/SmartNotification.min.js' %}"></script>
 	<script>
-		$(document).ready(function(){
+		$(document).ready(function () {
 			pageSetUp()
 			localStorage.clear();
 			// trecho em Python kkkkk
 			{% if messages %}
-				{% for message in messages %}
-					$.smallBox({
-						title : "{{ message }}",
-						content : "<i class='fa fa-clock-o'></i> <i>2 segundos atrás...</i>",
-						color : '{{ message.tags }}',
-						iconSmall : "fa fa-check bounce animated",
-						timeout : 3000
-					})
-				{% endfor %}
+			{% for message in messages %}
+			$.smallBox({
+				title: "{{ message }}",
+				content: "<i class='fa fa-clock-o'></i> <i>2 segundos atrás...</i>",
+				color: '{{ message.tags }}',
+				iconSmall: "fa fa-check bounce animated",
+				timeout: 3000
+			})
+			{% endfor %}
 			{% endif %}
 		})
 	</script>
 	{% block js_plugins %}
 	<script>
-		$(document).ready(function(){
+		$(document).ready(function () {
 			$('#nav-inicio').addClass('active')
 		})
 	</script>

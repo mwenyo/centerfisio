@@ -1,12 +1,15 @@
 """Views Clínica"""
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from .forms import PacoteForm
-from .models import Convenio, Procedimento, Pacote, PacoteProcedimento
+from .models import Convenio, Procedimento, Pacote, PacoteProcedimento, Tipo
 
 class ConvenioView(LoginRequiredMixin, PermissionRequiredMixin, ListView): # pylint: disable=too-many-ancestors
     """Lista de Convenios"""
@@ -101,7 +104,6 @@ class PacoteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessa
     """Editar Pacotes"""
     model = Pacote
     form_class = PacoteForm
-    #fields = ['nome', 'descricao', 'valor', 'promocao', 'inicio', 'termino', 'status', ]
     template_name = "clinica/pacote/form.html"
     success_message = "Alteração realizada com sucesso!"
     success_url = reverse_lazy('clinica:pacote_lista')
@@ -158,4 +160,48 @@ class PacoteProcedimentoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, 
         return super(PacoteProcedimentoDeleteView, self).delete(request, *args, **kwargs)
 
     def get_success_url(self):
+        """Redirecionamento"""
         return reverse_lazy('clinica:pacote_detalhes', kwargs={'pk': self.parent})
+
+
+class PacoteProcedimentoCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, View):  # pylint: disable=too-many-ancestors,line-too-long
+    """Adicionar procedimentos ao Pacote"""
+    template_name = "clinica/pacote/pacoteprocedimento_form.html"
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'clinica.add_pacoteprocedimento'
+
+    def get(self, request, *args, **kwargs):
+        """GET"""
+        pacote = get_object_or_404(Pacote, pk=kwargs['pk'])
+        tipo = get_object_or_404(Tipo, id=pacote.tipo.id)
+        procedimentos = Procedimento.objects.filter(tipo=tipo, status=Procedimento.ATIVO)
+        context = {
+            'object' : pacote,
+            'procedimentos' : procedimentos
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        """POST"""
+        data = request.POST.copy()
+        pacote_id, quantidade, procedimento_id = data.get('pacote'), \
+            int(data.get('quantidade', '1')), data.get('procedimento')
+
+        pacote = get_object_or_404(Pacote, id=pacote_id)
+        procedimento = get_object_or_404(Procedimento, id=procedimento_id)
+
+        for i in range(quantidade): #pylint: disable=unused-variable
+            item = PacoteProcedimento(pacote=pacote, procedimento=procedimento)
+            item.save()
+
+        if quantidade > 1:
+            messages.success(request, 'Procedimentos adicionados ao pacote %s' % (pacote.nome))
+        else:
+            messages.success(
+                request,
+                'Procedimento %s adicionado ao pacote %s' % (procedimento.nome, pacote.nome)
+                )
+
+        return HttpResponseRedirect(
+            reverse_lazy('clinica:pacote_detalhes', kwargs={'pk': pacote.id})
+            )
