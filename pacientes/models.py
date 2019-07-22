@@ -60,7 +60,7 @@ class Paciente(models.Model):
         null=True, blank=True)
     estado_civil = models.CharField("Estado civíl", choices=ESTADO_CIVIL_CHOICES, \
         max_length=50, null=True, blank=True)
-    profissao = models.CharField("Profissão", max_length=50, default="Desempregado")
+    profissao = models.CharField("Profissão", max_length=200, default="Desempregado")
     endereco = models.CharField("Endereço", max_length=200, null=True, blank=True)
     complemento = models.CharField(max_length=200, null=True, blank=True)
     numero = models.PositiveSmallIntegerField("Número", null=True, blank=True)
@@ -68,12 +68,27 @@ class Paciente(models.Model):
     cidade = models.CharField(max_length=200, null=True, blank=True)
     uf = models.CharField('Estado', choices=UF_CHOICES, max_length=2,\
         null=True, blank=True)
+    diabetes = models.BooleanField(default=False)
+    hipertensao = models.BooleanField('Hipertensão', default=False)
+    observacoes = models.TextField('Observações', null=True, blank=True)
+    email = models.EmailField(max_length=254, null=True, blank=True)
+    altura = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    peso = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
     @property
     def nome_completo(self):
         """Retorna o nome completo do paciente"""
 
         return "%s %s" % (self.nome, self.sobrenome)
+
+    @property
+    def imc(self):
+        """Retorna o IMC do Paciente"""
+        try:
+            resultado = self.peso / self.altura ** 2
+            return "%.2f" % (resultado)
+        except Exception:  # pylint: disable=broad-except
+            return "0"
 
     def __str__(self):
         """Retorna o texto contendo o nome completo"""
