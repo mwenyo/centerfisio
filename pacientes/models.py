@@ -86,9 +86,29 @@ class Paciente(models.Model):
         """Retorna o IMC do Paciente"""
         try:
             resultado = self.peso / self.altura ** 2
-            return "%.2f" % (resultado)
+            return resultado
         except Exception:  # pylint: disable=broad-except
-            return "0"
+            return "Impossível de calcular"
+
+    @property
+    def imc_escala(self):
+        """Retorna o IMC do Paciente"""
+        try:
+            float(self.imc)
+            if self.imc >= 40:
+                return '<span class="text-danger">Obesidade III</span>'
+            elif self.imc >= 35 and self.imc < 40:
+                return '<span class = "text-danger"> Obesidade II</span>'
+            elif self.imc >= 30 and self.imc < 35:
+                return '<span class = "text-danger"> Obesidade I</span>'
+            elif self.imc >= 25 and self.imc < 30:
+                return '<span class = "text-warning">Sobrepeso</span>'
+            elif self.imc >= 18.5 and self.imc < 25:
+                return '<span class = "text-success"> Peso Normal</span>'
+            else:
+                return '<span class = "text-danger"> Abaixo do Peso</span>'
+        except ValueError:
+            return ""
 
     def __str__(self):
         """Retorna o texto contendo o nome completo"""

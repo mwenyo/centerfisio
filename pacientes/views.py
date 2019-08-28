@@ -1,7 +1,7 @@
 """View do App Paciente"""
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
@@ -11,11 +11,20 @@ from .models import Paciente
 from .forms import PacienteForm, ContatoFormSet
 
 class PacienteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):  # pylint: disable=too-many-ancestors
-    """ListView Pacientes"""
+    """Lista de Pacientes"""
     model = Paciente
     template_name = 'pacientes/list.html'
     login_url = reverse_lazy('admin:login')
     permission_required = 'pacientes.view_paciente'
+
+
+class PacienteDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):  # pylint: disable=too-many-ancestors
+    """Detallhes do Paciente"""
+    model = Paciente
+    template_name = "pacientes/detail.html"
+    login_url = reverse_lazy('admin:login')
+    permission_required = 'pacientes.view_paciente'
+
 
 class PacienteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, UpdateView):  # pylint: disable=too-many-ancestors,line-too-long
     """Editar Pacientes"""
@@ -55,7 +64,7 @@ class PacienteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMes
             return self.form_valid(form, contato_formset)
         return self.form_invalid(form, contato_formset)
 
-    def form_valid(self, form, contato_formset):  # pylint: disable=arguments-differ
+    def form_valid(self, form, contato_formset):
         self.object = form.save()
         contatos = contato_formset.save(commit=False)
         for obj in contato_formset.deleted_objects:
@@ -105,7 +114,7 @@ class PacienteCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMes
         contato_formset = ContatoFormSet()
         return self.render_to_response(
             self.get_context_data(form=form,
-                                  contato_form=contato_formset))
+                                  contato_formset=contato_formset))
 
     def post(self, request, *args, **kwargs):
         """

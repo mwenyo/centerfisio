@@ -1,6 +1,73 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block navegacao %}
+<ul>
+    <li id="nav-inicio">
+        <a href="/" title="Página Inicial"><i class="fa fa-lg fa-fw fa-home"></i>
+            <span class="menu-item-parent"> Início</span>
+        </a>
+    </li>
+    <li id="nav-caixa">
+        <a href="#" title="Movimentação do Caixa"><i class="fa fa-lg fa-fw fa-money"></i>
+            <span class="menu-item-parent"> Caixa</span>
+        </a>
+    </li>
+    <li class="active" id="nav-pacientes">
+        <a href="{% url 'pacientes:paciente_list' %}" title="Lista de Pacientes"><i class="fa fa-lg fa-fw fa-group"></i>
+            <span class="menu-item-parent"> Pacientes</span>
+        </a>
+    </li>
+    <li id="nav-fisioterapia">
+        <a href="#" title="Pacientes de Fisioterapia"><i class="fa fa-lg fa-fw fa-wheelchair"></i>
+            <span class="menu-item-parent">Fisioterapia</span>
+        </a>
+    </li>
+    <li id="nav-estetica">
+        <a href="#" title="Pacientes de Estética"><i class="fa fa-lg fa-fw fa-star-o"></i>
+            <span class="menu-item-parent">Estética</span>
+        </a>
+    </li>
+    <li id="nav-pilates">
+        <a href="#" title="Turmas de Pilates"><i class="fa fa-lg fa-fw fa-child"></i>
+            <span class="menu-item-parent">Pilates</span>
+        </a>
+    </li>
+    <li id="nav-config">
+        <a href="#" title="Configurações"><i class="fa fa-lg fa-fw fa-gears"></i>
+            <span class="menu-item-parent">Configurações</span>
+        </a>
+        <ul>
+            <li>
+                <a href="#"><i class="fa fa-fw fa-pencil-square-o"></i> Cadastros</a>
+                <ul>
+                    <li>
+                        <a href="{% url 'clinica:pacote_lista' %}">
+                            <i class="fa fa-fw fa-dropbox"></i> Pacotes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'clinica:procedimento_lista' %}">
+                            <i class="fa fa-fw fa-flash"></i> Procedimentos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'clinica:convenio_lista' %}">
+                            <i class="fa fa-fw fa-medkit"></i> Convênios
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'funcionarios:funcionario_lista' %}">
+                            <i class="fa fa-fw fa-user"></i> Funcionarios
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+
+</ul>
+{% endblock navegacao %}
 
 {% block breadcrumb %}
     <li>Pacientes</li>
@@ -104,7 +171,6 @@
                                             <th class="text-center">Gênero</th>
                                             <th class="text-center">Estado Civil</th>
                                             <th class="text-center">IMC</th>
-                                            <th class="text-center">Endereço</th>
                                             <th class="text-center">Bairro</th>
                                             <th class="text-center" >Cidade</th>
                                             <th class="text-center" >Ações</th>
@@ -112,7 +178,11 @@
                                         <tbody>
                                             {% for paciente in object_list %}
                                             <tr>
-                                                <td>{{ paciente.nome_completo }}</td>
+                                                <td>
+                                                    <a href="{% url 'pacientes:paciente_detalhes' paciente.id %}">
+                                                        <strong>{{ paciente.nome_completo }}</strong>
+                                                    </a>
+                                                </td>
                                                 <td>{{ paciente.nascimento }}</td>
                                                 <td class="text-center">
                                                     
@@ -124,8 +194,7 @@
                                                         
                                                 </td>
                                                 <td>{{ paciente.estado_civil }}</td>
-                                                <td class="text-center">{{ paciente.imc }}</td>
-                                                <td>{{ paciente.endereco }}{% if paciente.complemento %}, {{ paciente.complemento }}{% endif %}, Nº {{ paciente.numero }}</td>
+                                                <td class="text-center">{{ paciente.imc|floatformat:2 }}</td>
                                                 <td>{{ paciente.bairro }}</td>
                                                 <td>{{ paciente.cidade }}-{{ paciente.uf }}</td>
                                                 <td><a href="{% url 'pacientes:paciente_editar' paciente.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>

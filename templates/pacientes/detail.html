@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block navegacao %}
 <ul>
-    <li class="" id="nav-inicio">
+    <li id="nav-inicio">
         <a href="/" title="Página Inicial"><i class="fa fa-lg fa-fw fa-home"></i>
             <span class="menu-item-parent"> Início</span>
         </a>
@@ -13,7 +14,7 @@
             <span class="menu-item-parent"> Caixa</span>
         </a>
     </li>
-    <li id="nav-pacientes">
+    <li class="active" id="nav-pacientes">
         <a href="{% url 'pacientes:paciente_list' %}" title="Lista de Pacientes"><i class="fa fa-lg fa-fw fa-group"></i>
             <span class="menu-item-parent"> Pacientes</span>
         </a>
@@ -33,15 +34,15 @@
             <span class="menu-item-parent">Pilates</span>
         </a>
     </li>
-    <li id="nav-config" class="active open">
+    <li id="nav-config">
         <a href="#" title="Configurações"><i class="fa fa-lg fa-fw fa-gears"></i>
             <span class="menu-item-parent">Configurações</span>
         </a>
-        <ul style="display:block;">
-            <li class="active open">
+        <ul>
+            <li>
                 <a href="#"><i class="fa fa-fw fa-pencil-square-o"></i> Cadastros</a>
-                <ul style="display:block;">
-                    <li class="active">
+                <ul>
+                    <li>
                         <a href="{% url 'clinica:pacote_lista' %}">
                             <i class="fa fa-fw fa-dropbox"></i> Pacotes
                         </a>
@@ -70,16 +71,15 @@
 {% endblock navegacao %}
 
 {% block breadcrumb %}
-<li>Configurações</li>
+<li>Pacientes</li>
 <li>Cadastros</li>
-<li>Pacotes</li>
 <li><strong>{{ object }}</strong></li>
 {% endblock breadcrumb %}
 
 
 {% block cabecalho %}
-<i class="fa-fw fa fa-cog"></i>
-Configuraçãoes <span> > Cadastros > Pacotes </span>
+<i class="fa-fw fa fa-group"></i>
+Pacientes <span> > Cadastros </span>
 {% endblock cabecalho %}
 
 
@@ -124,17 +124,115 @@ Configuraçãoes <span> > Cadastros > Pacotes </span>
                     <div class="widget-body no-padding">
                         <ul id="widget-tab-1" class="nav nav-tabs">
                             <li class="active">
-                                <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-tasks"></i> <span
-                                        class="hidden-mobile hidden-tablet">
-                                        Procedimentos </span></a>
+                                <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-info-circle"></i> <span
+                                        class="hidden-mobile hidden-tablet"> Dados Pessoais </span></a>
                             </li>
                             <li>
-                                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-info-circle"></i> <span
-                                        class="hidden-mobile hidden-tablet"> Detalhes </span></a>
+                                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-tasks"></i> <span
+                                        class="hidden-mobile hidden-tablet">
+                                        Procedimentos </span></a>
                             </li>
                         </ul>
                         <div class="tab-content padding-10">
                             <div class="tab-pane fade in active" id="hr1">
+                                <dl class="dl-horizontal font-lg">
+                                    <dt>Nome</dt>
+                                    <dd>{{ object.nome_completo }}</dd>
+                                    <dt>CPF</dt>
+                                    <dd>{{ object.cpf }}</dd>
+                                    <dt>D. Nascimento</dt>
+                                    <dd>{{ object.nascimento }}</dd>
+                                    <dt>Telefone(s)</dt>
+                                    <dd>{{ object.telefone1 }}
+                                    
+                                    {% if object.telefone2 %}
+                                         / {{ object.telefone2 }}
+                                    {% endif %}
+                                        </dd>
+                                    <dt>Gênero</dt>
+                                    <dd>
+                                        {% if object.genero == 'f' %}
+                                            Feminino
+                                        {% elif object.genero == 'm' %}
+                                            Masculino
+                                        {% else %}
+                                            Não Declarado
+                                        {% endif %}
+                                    </dd>
+                                    <dt>Estado Civil</dt>
+                                    <dd>{{ object.estado_civil }}</dd>
+                                    <dt>Profissão</dt>
+                                    <dd>{{ object.profissao }}</dd>
+                                    <dt>Endereço</dt>
+                                    <dd>
+                                        {{ object.endereco }}, 
+                                        
+                                        {% if object.complemento %}
+                                            {{ object.complemento }}, 
+                                        {% endif %}
+                                        {% if object.numero %}
+                                            {{ object.numero }}, 
+                                        {% else %}
+                                            S/N, 
+                                        {% endif %}
+                                            
+                                    {{ object.bairro }}
+                                    </dd>
+                                    <dt>Município</dt>
+                                    <dd>{{ object.cidade }}-{{ object.uf }}</dd>
+                                    <dt>Diabetes</dt>
+                                    <dd>
+                                        {% if object.diabetes %}
+                                            Sim
+                                        {% else %}
+                                            Não   
+                                        {% endif %}
+                                    </dd>
+                                    <dt>Hipertensão</dt>
+                                    <dd>
+                                        {% if object.hipertensao %}
+                                            Sim
+                                        {% else %}
+                                            Não   
+                                        {% endif %}
+                                    </dd>
+                                    <dt>Email</dt>
+                                    <dd>
+                                        {{ object.email|default:"Não informado" }}
+                                    </dd>
+                                    <dt>Observações</dt>
+                                    {% autoescape off %}
+                                        <dd>{{ object.observacoes }}</dd>
+                                    {% endautoescape %}
+                                    <dt>Altura</dt>
+                                    <dd>
+                                        {% if object.altura %}
+                                            {{ object.altura }} m
+                                        {% else %}
+                                            Não informado
+                                        {% endif %}
+                                    </dd>
+                                    <dt>Peso</dt>
+                                    <dd>
+                                        {% if object.peso %}
+                                            {{ object.peso }} m
+                                        {% endif %}    
+                                    </dd>
+                                    <dt>IMC</dt>
+                                    <dd>
+                                        {{ object.imc|default:"Não foi possível calcular"|floatformat:2 }}
+                                        {% autoescape off %}
+                                        {% firstof object.imc_escala  "" %}
+                                        {% endautoescape %}
+                                    </dd>
+
+                                </dl>
+                                <footer>
+                                    <a href="{% url 'pacientes:paciente_editar' object.id %}" class="btn btn-primary">Editar</a>
+                                    <a href="{% url 'pacientes:paciente_deletar' object.id %}" class="btn btn-danger pull-right">Excluir</a>
+                                </footer>
+                            </div>
+                            <div class="tab-pane fade in" id="hr2">
                                 <div class="row">
                                     <div class="col-xs-9 col-sm-5 col-md-5 col-lg-5">
                                         <h2>
@@ -181,30 +279,6 @@ Configuraçãoes <span> > Cadastros > Pacotes </span>
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="tab-pane fade in" id="hr2">
-                                <dl class="dl-horizontal font-lg">
-                                    <dt>NOME</dt>
-                                    <dd>{{ object.nome|upper }}</dd>
-                                    <dt>DESCRIÇÃO</dt>
-                                    <dd>{{ object.descricao }}</dd>
-                                    <dt>TIPO</dt>
-                                    <dd>{{ object.tipo }}</dd>
-                                    <dt>VALOR</dt>
-                                    <dd>R$ {{ object.valor }}</dd>
-                                    <dt>SITUAÇÃO</dt>
-                                    <dd>
-                                        {% if object.status %}
-                                            Ativo
-                                        {% else %}
-                                            Inativo
-                                        {% endif %}
-                                    </dd>
-                                </dl>
-                                <footer>
-                                    <a href="{% url 'clinica:pacote_editar' object.id %}" class="btn btn-primary">Editar</a>
-                                    <a href="{% url 'clinica:pacote_deletar' object.id %}" class="btn btn-danger pull-right">Excluir</a>
-                                </footer>
                             </div>
                         </div>
                     </div>
