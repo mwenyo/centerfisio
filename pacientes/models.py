@@ -47,7 +47,7 @@ class Paciente(models.Model):
     GENERO_CHOICE = (
         ('m', 'Masculino'),
         ('f', 'Feminino'),
-        ('nd', 'Não declarado'),
+        ('nd', 'Não declarar'),
     )
 
     nome = models.CharField(max_length=200)
