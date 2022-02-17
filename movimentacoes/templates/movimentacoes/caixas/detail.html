@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load filters %}
+
+
+{% block css %}
+
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/datagrid/datatables/datatables.bundle.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/notifications/toastr/toastr.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/formplugins/select2/select2.bundle.css' %}">
+
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+<li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_financeiro %}
+
+<li class="active open">
+
+{% endblock nav_financeiro %}
+
+{% block nav_financeiro_caixa_movimentacao %}
+
+<li class="active">
+
+{% endblock nav_financeiro_caixa_movimentacao %}
+
+
+{% block breadcrumb-item %}
+
+<li class="breadcrumb-item activate">Financeiro</li>
+<li class="breadcrumb-item activate">Caixas</li>
+
+{% if object.status %}
+
+    <li class="breadcrumb-item activate">Movimentação</li>
+
+{% else %}
+
+<li class="breadcrumb-item activate">Histórico</li>
+
+{% endif %}
+
+{% endblock breadcrumb-item %}
+
+
+{% block subheader_title %}
+
+<i class='subheader-icon fal fa-cash-register'></i> 
+
+{% if object.status %}
+<span class="badge badge-success">Caixa Aberto</span>
+{% else %}
+<span class="badge badge-warning">Caixa Fechado</span>
+{% endif %}
+    
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+Movimentação do Caixa
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+
+
+{% endblock subheader_block %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-6 col-lg-3">
+        <div class="p-2 bg-info-300 rounded overflow-hidden position-relative text-white mb-g">
+            <div class="">
+                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                    R$ <span id="card_saldo">{{ object.saldo }}</span>
+                    <small class="m-0 l-h-n"><b>Saldo</b></small>
+                </h3>
+            </div>
+            <i class="fal fa-cash-register position-absolute pos-right pos-bottom opacity-20 mb-n1 mr-n1"
+                style="font-size: 5.5rem"></i>
+        </div>
+    </div>
+    {% for dado in dados1 %}
+        <!--div class="col-sm-6 col-lg-3">
+            <div class="p-2 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                <div class="">
+                    <h3 class="display-4 d-block l-h-n m-0 fw-500">R$ {{ dado.soma }}<small class="m-0 l-h-n"><b>{{ dado.forma_pagamento }}</b></small>
+                    </h3>
+                </div>
+                {% if dado.forma_pagamento == 'DÉBITO' or dado.forma_pagamento == 'CRÉDITO À VISTA' or dado.forma_pagamento == 'CRÉDITO 2X' %}
+                    <i class="fal fa-credit-card position-absolute pos-right pos-bottom opacity-20 mb-n1 mr-n1"
+                    style="font-size: 5.5rem"></i>
+                {% elif dado.forma_pagamento == 'TRANSFERÊNCIA' %}
+                    <i class="fal fa-mobile-android-alt position-absolute pos-right pos-bottom opacity-20 mb-n1 mr-n1"
+                    style="font-size: 5.5rem"></i>
+                {% else %}
+                    <i class="fal fa-money-bill-wave position-absolute pos-right pos-bottom opacity-20 mb-n1 mr-n1"
+                    style="font-size: 5.5rem"></i>
+                {% endif %}
+            </div>
+        </div-->
+    {% endfor %}
+</div>
+{% if object.status %}
+<div class="row">
+    <div class="col">
+        <a href="javascript:void(0)" data-url="{% url 'movimentacoes:movimentacao_create' %}" id="movimentar_caixa" data-id="{{ object.id }}" class="btn btn-success btn-block font-weight-bold fs-lg">
+        <i class="fas fa-plus"></i> <i class="fas fa-exchange"></i>
+           <span class="hidden-md-down ml-1"> Movimentar Caixa</span>
+        </a>
+    </div>
+    <div class="col">
+        <a href="javascript:void(0)" id="fechar_caixa" data-id="{{ object.id }}" data-url="{% url 'movimentacoes:caixa_fechar' object.id %}" class="btn btn-danger btn-block font-weight-bold fs-lg">
+        <i class="fas fa-window-close"></i> <i class="fas fa-cash-register"></i>
+           <span class="hidden-md-down ml-1"> Fechar Caixa</span>
+        </a>
+    </div>
+    <div class="col">&nbsp;</div>
+    <div class="col">&nbsp;</div>
+</div>
+<div class="row">&nbsp;</div>
+{% endif %}
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Entradas e Saídas
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Horário</th>
+                                <th>Descrição</th>
+                                <th>Natureza</th>
+                                <th>Tipo</th>
+                                <th>Meio</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for agp  in object.agendamentopagamento_set.all %}
+                                <tr>
+                                    <td class="text-center">{{ agp.horario|date:'SHORT_DATETIME_FORMAT' }}</td>
+                                    <td>{{ agp.agendamento.paciente.nome|truncatewords:2 }}, {{ agp.agendamento.data|date:'SHORT_DATE_FORMAT' }} às {{ agp.agendamento.horario }} | {{ agp.agendamento.profissional.user.first_name }}</td>
+                                    <td>Atendimento</td>
+                                    <td class="text-center"><span class="badge border border-success text-success">Entrada</span></td>
+                                    <td>{{ agp.forma_pagamento.nome }}</td>
+                                    <td>R$ {{ agp.valor_pago }}</td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                            {% for mov in object.movimentacao_set.all  %}
+                                <tr>
+                                    <td class="text-center">{{ mov.horario|date:'SHORT_DATETIME_FORMAT' }}</td>
+                                    <td>{{ mov.descricao }}</td>
+                                    <td>{{ mov.natureza }}</td>
+                                    <td class="text-center" data-id="{{ mov.tipo }}">
+                                        {% if mov.tipo == mov.TipoMovimentacao.ENTRADA %}
+                                            <span class="badge border border-success text-success">Entrada</span></td>
+                                        {% else %}
+                                            <span class="badge border border-danger text-danger">Saída</span></td>
+                                        {% endif %}
+                                    <td data-id="{{ mov.forma_pagamento.id }}">{{ mov.forma_pagamento.nome }}</td>
+                                    <td>R$ {{ mov.valor }}</td>
+                                    <td class="text-center">
+                                        {% if object.status %}
+                                            <a href="javascript:void(0);" id="edit_{{ mov.id }}" class="btn btn-sm btn-primary mr-2 edit_mov" title="Editar Movimentação" data-id="{{ mov.id }}" data-url="{% url 'movimentacoes:movimentacao_edit' mov.id %}">
+                                                            <i class="fas fa-edit "></i>
+                                            </a>
+                                            <a href="javascript:void(0);" id="delete_{{ mov.id }}" class="btn btn-sm btn-danger mr-2 delete_mov" title="Excluir Movimentação"data-id="{{ mov.id }}" data-url="{% url 'movimentacoes:movimentacao_delete' mov.id %}">
+                                                <i class="fas fa-times "></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% csrf_token %}
+{% endblock content %}
+
+
+{% block javascript %}
+
+<script src="{% static 'js/datagrid/datatables/datatables.bundle.js' %}"></script>
+<script src="{% static 'js/datagrid/datatables/alt-string.js' %}"></script>
+<script src="{% static 'js/notifications/toastr/toastr.js' %}"></script>
+<script src="{% static 'js/formplugins/select2/select2.bundle.js' %}"></script>
+<script src="{% static 'js/siga/movimentacoes/caixas/caixa_detail.js' %}"></script>
+
+{% endblock javascript %}

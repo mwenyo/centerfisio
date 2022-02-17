@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+
+
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+<li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_pacientes %}
+
+<li class="active open">
+
+{% endblock nav_pacientes %}
+
+
+{% block nav_pacientes_listagem %}
+
+<li class="active">
+
+{% endblock nav_pacientes_listagem %}
+
+
+{% block breadcrumb-item %}
+
+<li class="breadcrumb-item activate"><a href="{% url 'pacientes:paciente_list' %}">Pacientes</a></li>
+<li class="breadcrumb-item activate"><a href="{% url 'pacientes:paciente_list' %}">Listagem</a></li>
+<li class="breadcrumb-item activate">Informações</li>
+
+{% endblock breadcrumb-item %}
+
+
+{% block subheader_title %}
+
+<i class='subheader-icon fal fa-address-card'></i> Pacientes: <span class="fw-300">Informações</span>
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+Perfil e Agendamentos
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+
+
+{% endblock subheader_block %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <a href="javascript:void(0)" class="btn btn-success btn-block font-weight-bold fs-xl">
+           <i class="fas fa-address-book"></i> 
+           <span class="hidden-md-down ml-1"> Agendar Atendimento</span>
+        </a>
+    </div>
+    <div class="col">
+        <a href="{% url 'pacientes:paciente_edit' object.id %}" class="btn btn-primary btn-block font-weight-bold fs-xl">
+            <i class="fas fa-edit"></i> 
+            <span class="hidden-md-down ml-1"> Alterar Dados Pessoais</span>
+        </a>
+    </div>
+    <div class="col">
+        <a href="javascript:void(0)" id="btn_excluir" class="btn btn-danger btn-block font-weight-bold fs-xl" rel="{{ object.nome }}">
+            <i class="fas fa-times"></i> 
+            <span class="hidden-md-down ml-1"> Excluir Paciente</span>
+        </a>
+    </div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Informações de <span class="fw-300"><i>{{ object.nome }}</i></span>
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <a class="nav-link active" id="v-pills-perfil-tab" data-toggle="pill" href="#v-pills-perfil" role="tab"
+                                    aria-controls="v-pills-perfil" aria-selected="false">
+                                    <i class="fal fa-user"></i>
+                                    <span class="hidden-sm-down ml-1"> Perfil</span>
+                                </a>
+                                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
+                                    aria-controls="v-pills-messages" aria-selected="false">
+                                    <i class="fal fa-envelope"></i>
+                                    <span class="hidden-sm-down ml-1"> Messages</span>
+                                </a>
+                                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"
+                                    aria-controls="v-pills-settings" aria-selected="false">
+                                    <i class="fal fa-cog"></i>
+                                    <span class="hidden-sm-down ml-1"> Settings</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-perfil" role="tabpanel" aria-labelledby="v-pills-perfil-tab">
+                                    <h1>
+                                        Perfil
+                                    </h1>
+                                    <hr>
+                                    <div class="d-flex flex-row rounded-top mb-3">
+                                        <div>
+                                            <dl class="row">
+                                                <dt class="col-sm-3 fs-xl">Nome</dt>
+                                                <dd class="col-sm-9 fs-xl">{{ object.nome }}</dd>
+                                                <dt class="col-sm-3 fs-xl">Telefone</dt>
+                                                <dd class="col-sm-9 fs-xl">
+                                                    <a href="tel:{{ object.telefone }}">
+                                                        {{ object.telefone }}
+                                                    </a>
+                                                </dd>
+                                                
+                                                {% if object.data_nascimento %}
+                                                    <dt class="col-sm-3 fs-xl">Nascimento</dt>
+                                                    <dd class="col-sm-9 fs-xl">
+                                                        {{ object.data_nascimento }}
+                                                    </dd>
+                                                {% endif %}
+                                                {% if object.cpf %}
+                                                    <dt class="col-sm-3 fs-xl">CPF</dt>
+                                                    <dd class="col-sm-9 fs-xl">{{ object.cpf }}</dd>
+                                                {% endif %}
+                                                {% if object.rg %}
+                                                    <dt class="col-sm-3 fs-xl">RG</dt>
+                                                    <dd class="col-sm-9 fs-xl">{{ object.rg }}</dd>
+                                                {% endif %}
+                                                {% if object.endereco or object.cidade or object.estado %}
+                                                    <dt class="col-sm-3 fs-xl">Endereço</dt>
+                                                    <dd class="col-sm-9 fs-xl">
+                                                        {% if object.endereco %}
+                                                            {{ object.endereco }},
+                                                        {% endif %}
+                                                            
+                                                        {% if object.cidade %}
+                                                            {{ object.cidade }} - 
+                                                        {% endif %}
+                                                        
+                                                        {% if object.estado %}
+                                                            {{ object.estado }}
+                                                        {% endif %}
+                                                    </dd>
+                                                {% endif %}
+                                                {% if object.email %}
+                                                    <dt class="col-sm-3 fs-xl">Email</dt>
+                                                    <dd class="col-sm-9 fs-xl">{{ object.email }}</dd>
+                                                {% endif %}
+                                                {% if object.profissao %}
+                                                    <dt class="col-sm-3 fs-xl">Profissão</dt>
+                                                    <dd class="col-sm-9 fs-xl">{{ object.profissao }}</dd>
+                                                {% endif %}
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                                    <h3>
+                                        Messages
+                                    </h3>
+                                    <ul class="notification">
+                                        <li>
+                                            <a href="#" class="d-flex align-items-center py-2 px-0">
+                                                <span class="d-flex flex-column flex-1">
+                                                    <span class="name">Melissa Ayre</span>
+                                                    <span class="msg-a fs-sm">Re: New security codes</span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="d-flex align-items-center py-2 px-0">
+                                                <span class="d-flex flex-column flex-1">
+                                                    <span class="name">Adison Lee</span>
+                                                    <span class="msg-a fs-sm">Msed quia non numquam eius</span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="d-flex align-items-center py-2 px-0">
+                                                <span class="d-flex flex-column flex-1">
+                                                    <span class="name">Oliver Kopyuv</span>
+                                                    <span class="msg-a fs-sm">Msed quia non numquam eius</span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                                    <h3>Settings</h3>
+                                    <div class="alert alert-success">
+                                        <strong>
+                                            Settings saved
+                                        </strong>
+                                        <p class="m-0">
+                                            All your settings changes have been saved!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="excluir" action="{% url 'pacientes:paciente_delete' object.id %}" method="POST">{% csrf_token %}</form>
+{% endblock content %}
+
+
+{% block javascript %}
+<script>
+    $(document).ready(function(){
+        $("#btn_excluir").click(function(e){
+            var nome = $(this).attr('rel');
+            bootbox.confirm(
+            {
+                message: "Tem certeza que deseja excluir todos os dados do paciente <strong>" + nome + "</strong>?",
+                buttons:
+                {
+                    cancel:
+                    {
+                        label: 'Não',
+                        className: 'btn-danger'
+                    },
+                    confirm:
+                    {
+                        label: 'Sim',
+                        className: 'btn-success'
+                    }
+                },
+                callback: function(result)
+                {
+                    if (result){
+                        $('#excluir').submit();
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock javascript %}

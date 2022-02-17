@@ -1,0 +1,4 @@
+
+{% for profissional in profissionais %}
+    <option value="{{ profissional.id }}">{{ profissional.user.first_name }}</option>
+{% endfor %}

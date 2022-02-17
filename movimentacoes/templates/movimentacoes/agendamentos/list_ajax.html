@@ -1,0 +1,16 @@
+{% if object_list %}
+    <dl class="row">
+        {% for agendamento in object_list %}
+            <dt class="col-sm-2">{{ agendamento.horario }} ({{ agendamento.profissional.user.first_name  }})</dt>
+            <dd class="col-sm-10"> {{ agendamento.paciente.nome }}</dd>
+            <dt class="col-sm-2">
+                <span class="text-primary">Procedimentos</span>
+            </dt>
+            <dd class="col-sm-10">
+                <span class="text-primary procedimentos_agendados">{% for procedimento in agendamento.procedimentos.all %}{{ procedimento.nome }}, {% endfor %}{% for procedimento in agendamento.procedimentos_promo.all %}{{ procedimento.procedimento.nome }}, {% endfor %}</span>
+            </dd>
+        {% endfor %}
+    </dl>
+{% else %} 
+<span class="procedimentos_agendados">Não há agendamentos marcados para esse dia</span>
+{% endif %}

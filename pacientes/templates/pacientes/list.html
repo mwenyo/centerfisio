@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/datagrid/datatables/datatables.bundle.css' %}">
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+    <li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_pacientes %}
+
+    <li class="active open">
+    
+{% endblock nav_pacientes %}
+
+
+{% block nav_pacientes_listagem %}
+
+<li class="active">
+
+{% endblock nav_pacientes_listagem %}
+
+
+{% block breadcrumb-item %}
+
+<li class="breadcrumb-item activate">Pacientes</li>
+<li class="breadcrumb-item activate">Listagem</li>
+
+{% endblock breadcrumb-item %}
+    
+
+{% block subheader_title %}
+
+    <i class='subheader-icon fal fa-address-card'></i> Pacientes
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+    Listagem dos Pacientes
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+    
+
+{% endblock subheader_block %}
+    
+    
+{% block content %}
+<div class="row">
+    <div class="col-xl-12">
+        <a href="{% url 'pacientes:paciente_add' %}" class="btn btn-success" id="cadastrar_agendamento">
+            <i class="fas fa-plus"></i>
+            <span class="hidden-md-down"> Adicionar Paciente</span>
+        </a>
+    </div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Todos os Pacientes
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Telefone</th>
+                                <th>Nascimento</th>
+                                <th>Cidade</th>
+                                <th>UF</th>
+                                <th>Profissão</th>
+                                <th>Email</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if object_list %}
+                                {% for paciente in object_list %}
+                                    <tr>
+                                        <td>{{ paciente.nome }}</td>
+                                        <td>{{ paciente.telefone }}</td>
+                                        <td>
+                                            <txt alt="{{ paciente.data_nascimento|date:'Y-m-d' }}">
+                                                {{ paciente.data_nascimento|default_if_none:"&nbsp;" }}
+                                            </txt>
+                                        </td>
+                                        <td>{{ paciente.cidade|default_if_none:"&nbsp;" }}</td>
+                                        <td>{{ paciente.estado|default_if_none:"&nbsp;" }}</td>
+                                        <td>{{ paciente.profissao|default_if_none:"&nbsp;" }}</td>
+                                        <td>{{ paciente.email|default_if_none:"&nbsp;" }}</td>
+                                        <td>
+                                            <div class="text-center">
+                                                <a href="{% url 'pacientes:paciente_detail' paciente.id %}" class="btn btn-sm btn-outline-success mr-2" title="Detalhes">
+                                                    <i class="fal fa-eye "></i> 
+                                                </a>
+                                                <!--a href="{% url 'pacientes:paciente_edit' paciente.id %}" class="btn btn-sm btn-outline-primary mr-2" title="Editar">
+                                                    <i class="fal fa-edit "></i> 
+                                                </a-->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="excluir" method="post">
+    {% csrf_token %}
+</form>
+{% endblock content %}
+
+
+{% block javascript %}
+    <script src="{% static 'js/datagrid/datatables/datatables.bundle.js' %}"></script>
+    <script src="{% static 'js/datagrid/datatables/alt-string.js' %}"></script>
+
+    <script>
+        $(document).ready(function()
+            {
+                oTable = $('#dt-basic-example').dataTable(
+                {
+                    responsive: true,
+                    columnDefs: [
+                            {
+                                type: 'alt-string', targets: 2
+                            }
+                        ]
+                });
+            });
+    </script>
+{% endblock javascript %}
+    

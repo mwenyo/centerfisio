@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+    <li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_pacientes %}
+
+    <li class="active open">
+    
+{% endblock nav_pacientes %}
+
+
+{% block nav_pacientes_cadastrar %}
+
+<li class="active">
+
+{% endblock nav_pacientes_cadastrar %}
+
+
+{% block breadcrumb-item %}
+
+<li class="breadcrumb-item activate"><a href="{% url 'pacientes:paciente_list' %}">Pacientes</a></li>
+
+{% if object.id %}
+
+<li class="breadcrumb-item activate"><a href="{% url 'pacientes:paciente_list' %}">Listagem</a></li>
+<li class="breadcrumb-item activate">Editar</li>
+
+{% else %}
+
+<li class="breadcrumb-item activate">Cadastro</li>
+
+{% endif %}
+
+{% endblock breadcrumb-item %}
+
+
+{% block subheader_title %}
+
+<i class='subheader-icon fal fa-address-card'></i> Pacientes: <span class="fw-300">Cadastro</span>
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+Fórmulário de Cadastro
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+
+{% endblock subheader_block %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+
+                    {% if object %}
+                        Editar cadastro de <span class="fw-300">{{ object.nome }}</span>
+                    {% else %}
+                        Cadastrar Paciente
+                    {% endif %}
+                        
+                </h2>
+            </div>
+            <div class="panel-container show">
+                
+                {% if object %}
+                    <form action="{% url 'pacientes:paciente_edit' object.id %}" method="POST">
+                {% else %}
+                    <form action="{% url 'pacientes:paciente_add' %}" method="POST">
+                {% endif %}
+                    {% csrf_token %}
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">Nome</label>
+                                    {{ form.nome }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">Telefone</label>
+                                    {{ form.telefone }}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">Nascimento</label>
+                                    {{ form.data_nascimento }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">CPF</label>
+                                    {{ form.cpf }}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">RG</label>
+                                    {{ form.rg }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">Endereço</label>
+                                    {{ form.endereco }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">Cidade</label>
+                                    {{ form.cidade }}
+                                </div>
+                            </div>
+                            
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">UF</label>
+                                    {{ form.estado }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">Email</label>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">Profissão</label>
+                                    {{ form.profissao }}
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <div class="panel-content d-flex py-2">
+                        <div class="ml-auto">
+                            <button class="btn btn-primary" type="submit">Enviar</button>
+                        </div>
+                    </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block javascript %}
+<script src="{% static 'js/formplugins/inputmask/inputmask.bundle.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $(":input").inputmask();
+    });
+
+</script>
+{% endblock javascript %}

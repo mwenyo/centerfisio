@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+
+
+{% block css %}
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/datagrid/datatables/datatables.bundle.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/notifications/toastr/toastr.css' %}">
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+    <li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_procedimento %}
+
+    <li class="active"> 
+
+{% endblock nav_procedimento %}
+
+
+{% block breadcrumb-item %}
+
+    <li class="breadcrumb-item activate">Estética</li>
+    <li class="breadcrumb-item activate">Procedimentos</li>
+
+{% endblock breadcrumb-item %}
+    
+
+{% block subheader_title %}
+
+    <i class='subheader-icon fal fa-diagnoses'></i> Procedimentos
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+    Procedimentos de estética que a clínica realiza
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+    
+
+{% endblock subheader_block %}
+    
+    
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12">
+        <a href="javascript:void(0)" data-url="{% url 'procedimentos:procedimento_create' %}" class="btn btn-success" id="cadastrar_procedimento">
+            <i class="fas fa-plus"></i>
+            <span class="hidden-md-down"> Cadastrar Procedimento</span>
+        </a>
+    </div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Lista de Procedimentos
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th>Duração</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if object_list %}
+                                {% for procedimento in object_list %}
+                                    <tr>
+                                        <td>{{ procedimento.nome }}</td>
+                                        <td>{{ procedimento.descricao }}</td>
+                                        <td class="text-center">
+                                            {{ procedimento.duracao }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ procedimento.valor }}
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <a href="javascript:void(0);" id="edit_{{ procedimento.id }}" class="btn btn-sm btn-primary mr-2 edit_procedimento" title="Editar" data-nome="{{ procedimento.nome }}" data-descricao="{{ procedimento.descricao }}" data-duracao="{{ procedimento.duracao }}" data-id="{{ procedimento.id }}" data-valor="{{ procedimento.valor|troca_virgula_ponto }}" data-url="{% url 'procedimentos:procedimento_edit' procedimento.id %}">
+                                                    <i class="fas fa-edit "></i> 
+                                                </a>
+                                                <a href="javascript:void(0);" class="btn btn-sm btn-danger mr-2" title="Excluir" id="del_procedimento" data-id="{{ procedimento.id }}" data-delete-url="{% url 'procedimentos:procedimento_delete' procedimento.id %}" data-nome="{{ procedimento.nome }}">
+                                                    <i class="fas fa-times "></i> 
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="form_del_procedimento" method="post">
+    {% csrf_token %}
+</form>
+{% endblock content %}
+
+
+{% block javascript %}
+    <script src="{% static 'js/datagrid/datatables/datatables.bundle.js' %}"></script>
+    <script src="{% static 'js/data0grid/datatables/alt-string.js' %}"></script>
+    <script src="{% static 'js/notifications/toastr/toastr.js' %}"></script>
+    <script src="{% static 'js/siga/procedimentos/procedimento/procedimento.js' %}"></script>
+{% endblock javascript %}
+    

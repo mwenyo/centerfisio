@@ -1,0 +1,697 @@
+# DJANGO IMPORTS
+from django.views.generic import ListView
+from django.views.generic import DetailView
+from django.views.generic import View
+from django.contrib.auth.mixins import LoginRequiredMixin, \
+    PermissionRequiredMixin
+from django.shortcuts import get_object_or_404, render
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.forms.models import model_to_dict
+from django.urls import reverse_lazy
+from django.utils import timezone
+from django.db.models import F, Sum
+from decimal import Decimal
+import json
+import datetime
+
+
+# MODELS IMPORTS
+from .models import FormaDePagamento
+from .models import Caixa
+from .models import Agendamento
+from .models import Usuario
+from .models import Movimentacao
+from .models import AgendamentoPagamento
+from procedimentos.models import Procedimento, ProcedimentoPromocao
+from pacientes.models import Paciente
+
+# FORMS IMPORTS
+from .forms import FormaDePagamentoForm
+
+# -----USUÁRIO----- #
+
+
+class UsuarioAjaxListView(View):
+
+    permission_required = "movimentacoes.view_usuario"
+    login_url = reverse_lazy('admin:login')
+
+    def get(self, request):
+        profissionais = Usuario.objects.filter(
+            funcao=Usuario.FuncaoDoUsuario.ESTETICISTA)
+        return render(request, "movimentacoes/usuairos/list_ajax.html",
+                      context={'profissionais': profissionais})
+
+# -----FORMAS DE PAGAMENTO----- #
+
+
+class FormaDePagamentoListView(\
+    LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    """ Lista de Formas de Pagamento """
+    model = FormaDePagamento
+    template_name = "movimentacoes/formas_de_pagamento/list.html"
+    permission_required = "movimentacoes.view_formadepagamento"
+    login_url = reverse_lazy('admin:login')
+
+
+class FormaDePagamentoListAjaxView(\
+    LoginRequiredMixin, PermissionRequiredMixin,View):
+    
+    permission_required = "movimentacoes.view_formadepagamento"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request):
+        formas_pgto = list(
+            FormaDePagamento.objects.all().values('id', 'nome'))
+        return JsonResponse(formas_pgto, status=200, safe=False)
+
+
+class FormaDePagamentoUpdateView(
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    """ Lista de Formas de Pagamento """
+
+    permission_required = "movimentacoes.change_formadepagamento"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+        fpgto = get_object_or_404(FormaDePagamento, pk=id)
+        form = FormaDePagamentoForm(request.POST, instance=fpgto)
+        if form.is_valid and request.is_ajax():
+            form.save()
+            fpgto = get_object_or_404(FormaDePagamento, pk=id)
+            return JsonResponse(model_to_dict(fpgto), status=200)
+        else:
+            return JsonResponse(
+                {'result': 'formulario invalido'},
+                status=200)
+
+
+class FormaDePagamentoCreateView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    """ Lista de Formas de Pagamento """
+
+    permission_required = "movimentacoes.add_formadepagamento"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request):
+        form = FormaDePagamentoForm(request.POST)
+        if form.is_valid and request.is_ajax():
+            form.save()
+            fpgto = form.instance
+            return JsonResponse(model_to_dict(fpgto), status=200)
+        else:
+            return JsonResponse(
+                {'result': 'formulario invalido'},
+                status=200)
+
+
+class FormaDePagamentoDeleteView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    """ Lista de Formas de Pagamento """
+
+    permission_required = "movimentacoes.delete_formadepagamento"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+        fpgto = get_object_or_404(FormaDePagamento, pk=id)
+        fpgto.delete()
+        return JsonResponse({'result': 'ok'}, status=200)
+
+# -----CAIXAS----- #
+
+
+class CaixaDetailView(\
+    LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Caixa
+    template_name = "movimentacoes/caixas/detail.html"
+    object = None
+    permission_required = "movimentacoes.view_caixa"
+    login_url = reverse_lazy('admin:login')
+
+    def get_object(self, queryset=None):
+        self.object = super(CaixaDetailView, self).get_object()
+        return self.object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c = Caixa.objects.filter(id=self.object.id).annotate(
+            forma_pagamento=F('agendamentopagamento__forma_pagamento__nome'),
+            soma=Sum('agendamentopagamento__valor_pago',
+                     distinct=True)).values('forma_pagamento', 'soma')
+        if c[0]['forma_pagamento'] is not None:
+            context['dados'] = c
+        return context
+
+
+class CaixaMovimentacaoView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    permission_required = "movimentacoes.view_caixa"
+    login_url = reverse_lazy('admin:login')
+
+    def get(self, request):
+        caixa_aberto = Caixa.objects.filter(status=True)
+        if caixa_aberto.count() == 0:
+            return HttpResponseRedirect(
+                reverse_lazy('movimentacoes:caixa_list'))
+        return HttpResponseRedirect(reverse_lazy(
+            'movimentacoes:caixa_detail',
+            kwargs={
+                'pk': caixa_aberto[0].id
+            }
+        ))
+
+
+class CaixaListView(\
+    LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    """ Lista de Formas de Pagamento """
+    model = Caixa
+    template_name = "movimentacoes/caixas/list.html"
+    permission_required = "movimentacoes.view_caixa"
+    login_url = reverse_lazy('admin:login')
+
+    def get_context_data(self, **kwargs):
+        context = super(CaixaListView, self).get_context_data(**kwargs)
+        context['caixa_aberto'] = Caixa.objects.filter(status=True)
+        return context
+
+
+class CaixaAbrirView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    """ Lista de Formas de Pagamento """
+
+    permission_required = "movimentacoes.add_caixa"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request):
+        caixa_aberto = Caixa.objects.filter(status=True).count()
+        if caixa_aberto == 0:
+            saldo_inicial = request.POST.get('saldo_inicial', '')
+            caixa = Caixa(
+                operador=Usuario.objects.get(id=request.user.id),
+                saldo_inicial=saldo_inicial,
+                saldo=saldo_inicial,
+                data=timezone.now(),
+                abertura=timezone.now().time())
+            caixa.save()
+            return JsonResponse(model_to_dict(caixa), status=200)
+        else:
+            return JsonResponse({'result': 'Já existe um caixa aberto'},
+                                status=200)
+
+
+class CaixaFecharView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    permission_required = "movimentacoes.change_caixa"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+        caixa = get_object_or_404(Caixa, id=id)
+        usuario_logado = Usuario.objects.get(id=request.user.id)
+        if caixa.operador == usuario_logado:
+            caixa.status = False
+            caixa.fechamento = timezone.now().time()
+            caixa.save()
+
+            return JsonResponse(model_to_dict(caixa), status=200)
+        else:
+            return JsonResponse({'result': 'Impossivel fechar o caixa'},
+                                status=500)
+
+
+class CaixaUltimoAbertoAjaxView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    permission_required = "movimentacoes.change_caixa"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request):
+        caixa = Caixa.objects.filter(status=True).first()
+        if caixa:
+            return JsonResponse({"id": caixa.id}, status=200)
+        else:
+            return JsonResponse({'result': 'fechado'},
+                                status=200)
+
+
+class CaixaReceberAjaxView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    permission_required = "movimentacoes.change_caixa"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+        ag = get_object_or_404(Agendamento, pk=id)
+        caixa = get_object_or_404(Caixa, pk=int(request.POST.get('caixa', '')))
+        if ag.status == Agendamento.SituacaoDoAgendamento.EMATENDIMENTO:
+            if caixa.status:
+                formas_pgto = [get_object_or_404(
+                    FormaDePagamento, pk=x) for x in request.POST.getlist(
+                        'formas_de_pagamento[]', '')]
+                valores = [Decimal(x) for x in request.POST.getlist(
+                    'valores[]', '')]
+
+                saldo_parcial = 0
+                for i in range(len(formas_pgto)):
+                    valor = valores[i] - \
+                        (valores[i] * formas_pgto[i].desconto / 100)
+                    saldo_parcial += valor
+                    if valor > 0:
+                        agp = AgendamentoPagamento(agendamento=ag,
+                                                caixa=caixa,
+                                                forma_pagamento=formas_pgto[i],
+                                                valor_pago=valor,
+                                                horario=timezone.now())
+                        agp.save() 
+
+                caixa.saldo += saldo_parcial
+                caixa.save()
+                ag.status = \
+                    Agendamento.SituacaoDoAgendamento.ENCERRADO
+                ag.desconto = Decimal(request.POST.get('desconto', ''))
+                ag.save()
+                return JsonResponse({'result': 'ok'}, status=200)
+            else:
+                return JsonResponse({'result': 'Caixa fechado'}, status=500)
+        else:
+            return JsonResponse(
+                {'result': 'Agendamento já encerrado'}, status=500)
+
+
+# -----AGENDAMENTOS----- #
+
+
+class AgendamentoListView(\
+    LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = Agendamento
+    template_name = "movimentacoes/agendamentos/list.html"
+    permission_required = "movimentacoes.view_agendamento"
+    login_url = reverse_lazy('admin:login')
+
+
+class AgendamentoCreateView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    template_name = "movimentacoes/agendamentos/form.html"
+    permission_required = "movimentacoes.add_agendamento"
+    login_url = reverse_lazy('admin:login')
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        # exibir o post
+        usuario = get_object_or_404(Usuario, pk=request.user.id)
+        profissional = request.POST.get('profissional', '')
+        paciente = request.POST.get('paciente', '')
+        dia = request.POST.get('dia', '')
+        horario = request.POST.get('horario', '')
+        procedimentos = [int(x) for x in request.POST.getlist(
+            'procedimentos[]', '')]
+        p_promo = [int(x) for x in request.POST.getlist(
+            'procedimentos_promo[]', '')]
+        valor_diferenciado = request.POST.get('valor_diferenciado', '')
+        observacoes = request.POST.get('observacoes', '')
+
+        procedimentos_promocao = [p for p in [
+            ProcedimentoPromocao.objects.get(pk=id) for id in p_promo]]
+        procedimentos = [p for p in [
+            Procedimento.objects.get(pk=id) for id in procedimentos]]
+
+        valor_total = 0
+        flag_valor_diferenciado = False
+
+        if valor_diferenciado == '':
+            for i in procedimentos_promocao:
+                valor_total += i.valor_promocional
+
+            for i in procedimentos:
+                valor_total += i.valor
+
+        else:
+            valor_total = Decimal(valor_diferenciado)
+            flag_valor_diferenciado = True
+
+        agendamento = Agendamento(
+            usuario=usuario,
+            profissional=Usuario.objects.get(pk=profissional),
+            paciente=Paciente.objects.get(pk=paciente),
+            data=dia,
+            horario=horario,
+            observacoes=observacoes,
+            valor=valor_total,
+            valor_diferenciado=flag_valor_diferenciado
+        )
+
+        try:
+            agendamento.save()
+        except Exception as e:
+            x = json.dumps([{
+                'tipo': str(type(e)),
+                'valor': str(e)
+            }])
+            return HttpResponse(x, content_type="application/json", status=500)
+
+        # adiciona os procedimentos em promoção
+        [agendamento.procedimentos_promo.add(p)
+         for p in procedimentos_promocao]
+
+        # adiciona os procedimentos
+        [agendamento.procedimentos.add(p) for p in procedimentos]
+
+        return JsonResponse({'result': 'ok'}, status=200)
+
+
+class AgendamentosAjaxListView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    template_name = "movimentacoes/agendamentos/list_ajax.html"
+    permission_required = "movimentacoes.view_agendamento"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request):
+        data = request.POST.get('dia', '')
+        if data:
+            data = datetime.datetime.strptime(data, "%Y-%m-%d")
+        agendamentos = Agendamento.objects.filter(
+            data=data).prefetch_related(
+            'procedimentos', 'procedimentos_promo').all().order_by('horario')
+        return render(request,
+                      "movimentacoes/agendamentos/list_ajax.html",
+                      {'object_list': agendamentos})
+
+
+class AgendamentoAjaxDetailView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    permission_required = "movimentacoes.view_agendamento"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+        agendamento = [
+            {'agendamento': [
+                list(Agendamento.objects.filter(id=id).values())
+            ]
+            }
+        ]
+        procedimentos = [
+            {'procedimentos': [
+                list(Procedimento.objects.filter(agendamento__id=id).values())
+            ]
+            }
+        ]
+        procedimentos_promo = [
+            {'procedimentos_promo': [
+                list(ProcedimentoPromocao.objects.filter(
+                    agendamento__id=id).values())
+            ]
+            }
+        ]
+        context = [*agendamento, *procedimentos, *procedimentos_promo]
+        return JsonResponse(context, status=200, safe=False)
+
+
+class AgendamentoAjaxEditView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    permission_required = "movimentacoes.change_agendamento"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+
+        # BUSCA O AGENDAMENTO NO BANCO DE DADOS
+        agendamento = get_object_or_404(Agendamento, pk=id)
+
+        # USUÁRIO LOGADO NO MOMENTO
+        usuario = request.user.id
+
+        # INICIALIZA AS VARIÁVEIS DO POST
+        profissional = request.POST.get('profissional', '')
+        paciente = request.POST.get('paciente', '')
+        dia = request.POST.get('dia', '')
+        horario = request.POST.get('horario', '')
+        procedimentos = [int(x) for x in request.POST.getlist(
+            'procedimentos[]', '')]
+        p_promo = [int(x) for x in request.POST.getlist(
+            'procedimentos_promo[]', '')]
+        valor_diferenciado = request.POST.get('valor_diferenciado', '')
+        observacoes = request.POST.get('observacoes', '')
+        status = request.POST.get('status', '')
+
+        # BUSCA OS PROCEDIMENTOS NO BANCO DE DADOS
+        procedimentos_promocao = [p for p in [
+            ProcedimentoPromocao.objects.get(pk=id) for id in p_promo]]
+        procedimentos = [p for p in [
+            Procedimento.objects.get(pk=id) for id in procedimentos]]
+
+        # ATUALIZAÇÃO DOS DADOS NO OBJETO
+        agendamento.usuario = Usuario.objects.get(pk=usuario)
+        agendamento.profissional = Usuario.objects.get(pk=profissional)
+        agendamento.paciente = Paciente.objects.get(pk=paciente)
+        agendamento.data = dia
+        agendamento.horario = horario
+        agendamento.observacoes = observacoes
+        agendamento.status = status
+
+        # CÁLCULO DO VALOR
+        valor_total = 0
+
+        if valor_diferenciado == '':
+            for i in procedimentos_promocao:
+                valor_total += i.valor_promocional
+
+            for i in procedimentos:
+                valor_total += i.valor
+
+            agendamento.valor = valor_total
+            agendamento.valor_diferenciado = False
+        else:
+            agendamento.valor = Decimal(valor_diferenciado)
+            agendamento.valor_diferenciado = True
+
+        # SALVAR NO BANCO DE DADOS
+        try:
+            agendamento.save()
+        except Exception as e:
+            x = json.dumps([{
+                'tipo': str(type(e)),
+                'valor': str(e)
+            }])
+            return HttpResponse(x, content_type="application/json", status=500)
+
+        # remove os procedimentos em promoção antigos
+        agendamento.procedimentos_promo.clear()
+
+        # remove os procedimentos em promoção antigos
+        agendamento.procedimentos.clear()
+
+        # adiciona os procedimentos em promoção
+        [agendamento.procedimentos_promo.add(p)
+         for p in procedimentos_promocao]
+
+        # adiciona os procedimentos
+        [agendamento.procedimentos.add(p) for p in procedimentos]
+
+        # PREPRARA OS DADOS
+        agendamento = [
+            {'agendamento': [
+                list(Agendamento.objects.filter(id=id).annotate(
+                    _paciente=F('paciente__nome'),
+                    _profissional=F('profissional__user__first_name'),
+                    _data=F('data'),
+                    _horario=F('horario'),
+                    _observacoes=F('observacoes'),
+                    _valor=F('valor'),
+                    _situacao=F('status'),
+                    _valor_diferenciado=F('valor_diferenciado')
+                ).values('_paciente', '_profissional', '_data',
+                         '_horario', '_observacoes', '_valor',
+                         '_valor_diferenciado', '_situacao'))
+            ]
+            }
+        ]
+        procedimentos = [
+            {'procedimentos': [
+                list(Procedimento.objects.filter(agendamento__id=id).values())
+            ]
+            }
+        ]
+        procedimentos_promo = [
+            {'procedimentos_promo': [
+                list(ProcedimentoPromocao.objects.filter(
+                    agendamento__id=id).annotate(
+                        _nome=F('procedimento__nome')
+                ).values('_nome'))
+            ]
+            }
+        ]
+
+        # CONCATENAÇÃO DAS LISTAS
+        context = [*agendamento, *procedimentos, *procedimentos_promo]
+
+        # RETORNO JSON
+        return JsonResponse(context, status=200, safe=False)
+
+
+class AgendamentoAjaxDeleteView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    permission_required = "movimentacoes.delete_agendamento"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+
+        agendamento = get_object_or_404(Agendamento, pk=id)
+        if request.user.id == agendamento.usuario.user.id:
+            agendamento.delete()
+        else:
+            return JsonResponse(
+                {'result': 'Usuário não autorizado a excluir'},
+                status=403)
+
+        return JsonResponse([{'result': 'ok'}], status=200, safe=False)
+
+
+# -----MOVIMENTAÇÕES----- #
+
+
+class MovimentacaoCreateView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    """ Lista de Formas de Pagamento """
+
+    permission_required = "movimentacoes.add_movimentacao"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request):
+
+        # Preparação dos dados
+        usuario = get_object_or_404(Usuario, pk=request.user.id)
+        caixa = get_object_or_404(
+            Caixa, pk=request.POST.get('caixa', ''), status=True)
+        forma_pagamento = get_object_or_404(
+            FormaDePagamento, pk=request.POST.get('forma_pagamento', ''))
+        descricao = request.POST.get('descricao', '')
+        natureza = request.POST.get('natureza', '')
+        tipo = int(request.POST.get('tipo', ''))
+        horario = timezone.now()
+        valor = abs(Decimal(request.POST.get('valor', '')))
+
+        mov = Movimentacao(
+            usuario=usuario,
+            caixa=caixa,
+            forma_pagamento=forma_pagamento,
+            descricao=descricao,
+            natureza=natureza,
+            tipo=tipo,
+            horario=horario,
+            valor=valor)
+
+        if mov.valor > 0:
+            if mov.tipo == Movimentacao.TipoMovimentacao.ENTRADA:
+                caixa.saldo += mov.valor
+            else:
+                if caixa.saldo - mov.valor >= 0:
+                    caixa.saldo -= mov.valor
+                else:
+                    return JsonResponse({'result': 'Saldo Insuficiente'},
+                                        status=500)
+            mov.save()
+            caixa.save()
+            return JsonResponse(model_to_dict(mov), status=200)
+        else:
+            return JsonResponse({'result': 'Valor inválido'}, status=500)
+
+
+class MovimentacaoUpdateView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    """ Lista de Formas de Pagamento """
+
+    permission_required = "movimentacoes.change_movimentacao"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+
+        # Preparação dos dados
+        mov = get_object_or_404(Movimentacao, pk=id)
+        usuario = get_object_or_404(Usuario, pk=request.user.id)
+
+        if mov.caixa.status:
+            caixa = Caixa.objects.get(id=mov.caixa.id)
+            forma_pagamento = get_object_or_404(
+                FormaDePagamento, pk=request.POST.get('forma_pagamento', ''))
+            descricao = request.POST.get('descricao', '')
+            natureza = request.POST.get('natureza', '')
+            tipo = int(request.POST.get('tipo', ''))
+            valor = abs(Decimal(request.POST.get('valor', '')))
+
+            mov.usuario = usuario
+            mov.forma_pagamento = forma_pagamento
+            mov.descricao = descricao
+            mov.natureza = natureza
+
+            if valor > 0:
+                if mov.tipo == Movimentacao.TipoMovimentacao.ENTRADA \
+                        and tipo == Movimentacao.TipoMovimentacao.ENTRADA:
+
+                    caixa.saldo -= mov.valor
+                    caixa.saldo += valor
+                    mov.valor = valor
+
+                elif mov.tipo == Movimentacao.TipoMovimentacao.SAIDA \
+                        and tipo == Movimentacao.TipoMovimentacao.SAIDA:
+
+                    caixa.saldo += mov.valor
+
+                    if caixa.saldo - valor >= 0:
+                        caixa.saldo -= valor
+                        mov.valor = valor
+                    else:
+                        return JsonResponse({'result': 'Saldo Insuficiente'},
+                                            status=500)
+
+                elif mov.tipo == Movimentacao.TipoMovimentacao.ENTRADA \
+                        and tipo == Movimentacao.TipoMovimentacao.SAIDA:
+                    caixa.saldo -= mov.valor
+
+                    if caixa.saldo - valor >= 0:
+                        caixa.saldo -= valor
+                        mov.valor = valor
+                        mov.tipo = tipo
+                    else:
+                        return JsonResponse({'result': 'Saldo Insuficiente'},
+                                            status=500)
+                elif mov.tipo == Movimentacao.TipoMovimentacao.SAIDA \
+                        and tipo == Movimentacao.TipoMovimentacao.ENTRADA:
+                    caixa.saldo += mov.valor
+                    caixa.saldo += valor
+                    mov.valor = valor
+                    mov.tipo = tipo
+
+                mov.save()
+                caixa.save()
+                return JsonResponse(model_to_dict(mov), status=200)
+            else:
+                return JsonResponse({'result': 'Valor inválido'}, status=500)
+        else:
+            return JsonResponse({'result': 'Caixa Fechado'}, status=500)
+
+
+class MovimentacaoDeleteView(\
+    LoginRequiredMixin, PermissionRequiredMixin, View):
+    """ Lista de Formas de Pagamento """
+
+    permission_required = "movimentacoes.delete_movimentacao"
+    login_url = reverse_lazy('admin:login')
+
+    def post(self, request, id):
+        mov = get_object_or_404(Movimentacao, pk=id)
+        mov.delete()
+        if mov.caixa.status:
+            caixa = Caixa.objects.get(id=mov.caixa.id)
+            if mov.tipo == Movimentacao.TipoMovimentacao.ENTRADA:
+                caixa.saldo -= mov.valor
+            else:
+                caixa.saldo += mov.valor
+            caixa.save()
+            return JsonResponse({'result': 'ok'}, status=200)
+        else:
+            return JsonResponse({'result': 'Valor inválido'}, status=500)

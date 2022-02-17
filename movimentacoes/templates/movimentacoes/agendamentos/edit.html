@@ -1,0 +1,83 @@
+`<form id="id_form_editar" class="need-validation" novalidate>
+    <h3>Selecionar Paciente</h3>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <a href="javascript:void(0);" class="btn btn-success" id="id_novo_paciente"
+                data-url="{% url 'pacientes:paciente_add_ajax' %}"><i class="fas fa-plus"></i> Novo Paciente</a>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="form-label" for="id_buscar_paciente">Buscar Paciente</label>
+                <select id="id_buscar_paciente" class="form-control input-md border border-info" required>
+                    <option value=""></option>
+                </select>
+                <div class="invalid-feedback">Selecione um Paciente</div>
+            </div>
+        </div>
+    </div>
+    <h3>Agendamento</h3>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="form-label" for="id_buscar_profissionais">
+                    Profissional
+                </label>
+                <select name="profissional" id="id_buscar_profissionais" class="form-control" required>
+                    <option value=""></option>
+                </select>
+                <div class="invalid-feedback">Selecione um Profissional</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <label class="form-label">Data</label>
+                <input type="text" class="form-control input" id="id_data" required>
+                <div class="invalid-feedback">Selecione uma data</div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <label class="form-label">Horário</label>
+                <input type="time" class="form-control input" id="id_horario" required>
+                <div class="invalid-feedback">Digite o Horário de Atendimento</div>
+            </div>
+        </div>
+    </div>
+    <h3>Selcionar Procedimento(s)</h3>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="form-label" for="id_buscar_promocionais">Promocionais</label>
+                <select name="promocionais" id="id_buscar_promocionais" class="form-control input-md border border-info"
+                    multiple="multiple" required>
+                    <option value=""></option>
+                </select>
+                <div class="invalid-feedback">Selecione um procedimento</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="form-label" for="id_buscar_procedimentos">Procedimento</label>
+                <select name="procedimentos[]" id="id_buscar_procedimentos" class="form-control" multiple="multiple"
+                    required>
+                    <option value=""></option>
+                </select>
+                <div class="invalid-feedback">Selecione um procedimento</div>
+            </div>
+        </div>
+    </div>
+    <label class="form-label">Observações</label>
+    <textarea id="id_observacoes" cols="30" rows="10" class="form-control"></textarea>
+</form>`

@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+
+<link rel="stylesheet" media="screen, print" href="{% static 'css/formplugins/smartwizard/smartwizard.css' %}">
+<link rel="stylesheet" media="screen, print" href="{% static 'css/formplugins/select2/select2.bundle.css' %}">
+<link rel="stylesheet" media="screen, print" href="{% static 'css/miscellaneous/fullcalendar/fullcalendar.bundle.css' %}">
+<link rel="stylesheet" media="screen, print" href="{% static 'css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css' %}">
+<link rel="stylesheet" media="screen, print" href="{% static 'css/notifications/toastr/toastr.css' %}">
+
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+<li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_agendamentos %}
+
+<li class="active open">
+
+{% endblock nav_agendamentos %}
+
+{% block nav_agendamentos_cadastrar %}
+
+<li class="active">
+
+{% endblock nav_agendamentos_cadastrar %}
+
+
+{% block breadcrumb-item %}
+
+<li class="breadcrumb-item activate"><a href="{% url 'movimentacoes:agendamento_list' %}">Agendamentos</a></li>
+
+<li class="breadcrumb-item activate">Adicionar</li>
+
+{% endblock breadcrumb-item %}
+
+
+{% block subheader_title %}
+
+<i class='subheader-icon fal fa-address-book'></i> Agendamentos: <span class="fw-300">Adicionar</span>
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+Agendar Paciente
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+
+{% endblock subheader_block %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Agendar Paciente
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div id="smartwizard">
+                    <ul>
+                        <li><a href="#step-1">Agendamento</a></li>
+                        <li><a href="#step-2">Procedimento</a></li>
+                        <li><a href="#step-3">Observações</a></li>
+                        <li><a href="#step-4">Conclusão</a></li>
+                    </ul>
+                    <div class="p-3">
+                        <div id="step-1" class="">
+                            <form id="form-step-0" class="need-validation" novalidate>
+                                <h3>Agendamento</h3>
+                                <hr>
+                                <div class="row">
+                                    <div class="col">
+                                        <a href="javascript:void(0);" class="btn btn-success" id="id_novo_paciente" data-url="{% url 'pacientes:paciente_add_ajax' %}"><i class="fas fa-plus"></i> Novo Paciente</a>
+                                    </div>
+                                </div>
+                                <div class="row">&nbsp;</div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label" for="id_buscar_paciente">Buscar Paciente</label>
+                                            <select id="id_buscar_paciente" class="form-control input-md border border-info" required>
+                                                <option value=""></option>
+                                            </select>
+                                            <div class="invalid-feedback">Selecione um Paciente</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label" for="id_buscar_profissionais">
+                                                Profissional
+                                            </label>
+                                            <select name="profissional" id="id_buscar_profissionais" class="form-control" required>
+                                                <option value=""></option>
+                                            </select>
+                                            <div class="invalid-feedback">Selecione um Profissional</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">&nbsp;</div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Data</label>
+                                            <input type="text" class="form-control input" id="id_data" required>
+                                            <div class="invalid-feedback">Selecione uma data</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Horário</label>
+                                            <input type="time" class="form-control input" id="id_horario" required>
+                                            <div class="invalid-feedback">Digite o Horário de Atendimento</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">&nbsp;</div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label" id="id_agendamentos_profissional">Agendamentos</label>
+                                            <hr>
+                                            <!-- Carregar os dados ao selecionar o dia -->
+                                            <div id="id_carrega_agendamentos">Selecione um dia para exibir os agendamentos aqui!</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="step-2" class="">
+                            <form id="form-step-1" class="need-validation" novalidate>
+                                <h3>Selcionar Procedimento(s)</h3>
+                                <hr>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label" for="id_buscar_promocionais">Promocionais</label>
+                                            <select name="promocionais" id="id_buscar_promocionais" class="form-control input-md border border-info" multiple="multiple" required>
+                                                <option value=""></option>
+                                            </select>
+                                            <div class="invalid-feedback">Selecione um procedimento</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">&nbsp;</div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label" for="id_buscar_procedimentos">Procedimento</label>
+                                            <select name="procedimentos" id="id_buscar_procedimentos" class="form-control " multiple="multiple"
+                                                required>
+                                            </select>
+                                            <div class="invalid-feedback">Selecione um procedimento</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">&nbsp;</div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="id_valor_diferenciado">
+                                                <label class="custom-control-label" for="id_valor_diferenciado">Valor Diferenciado</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">&nbsp;</div>
+                                <div class="row" id="id_linha_valor" style="display: none">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label">Valor</label>
+                                            <input type="number" class="form-control input none" min="0.00" step="0.01" value="0.00" id="id_input_valor_diferenciado" required>
+                                            <div class="invalid-feedback">Digite um valor válido</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="step-3" class="">
+                            <label class="form-label">Observações</label>
+                            <textarea id="id_observacoes" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                        <div id="step-4" class="">
+                            <div id="resumo">
+                                <dl class="row fs-xl">
+                                    <dt class="col-sm-2">Paciente</dt>
+                                    <dl class="col-sm-10" id="id_conclusao_paciente"></dl>
+                                    <dt class="col-sm-2">Telefone</dt>
+                                    <dl class="col-sm-10" id="id_conclusao_telefone"></dl>
+                                    <dt class="col-sm-2">Profissional</dt>
+                                    <dl class="col-sm-10" id="id_conclusao_profissional"></dl>
+                                    <dt class="col-sm-2">Dia/Horário</dt>
+                                    <dl class="col-sm-10" id="id_conclusao_dia_horario"></dl>
+                                    <dt class="col-sm-2">Procedimentos</dt>
+                                    <dl class="col-sm-10" id="id_conclusao_procedimentos"></dl>
+                                    <dt class="col-sm-2 valor-diferenciado">Valor Diferenciado</dt>
+                                    <dl class="col-sm-10 valor-diferenciado" id="id_conclusao_valor"></dl>
+                                    <dt class="col-sm-2">Observações</dt>
+                                    <dl class="col-sm-10" id="id_conclusao_observacoes"></dl>
+                                </dl>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <a href="javascript:void(0);" class="btn btn-primary btn-block" id="id_salvar"><i class="fas fa-check"></i> Salvar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form>{% csrf_token %}</form>
+
+{% endblock content %}
+
+
+{% block javascript %}
+<script src="{% static 'js/formplugins/inputmask/inputmask.bundle.js' %}"></script>
+<script src="{% static 'js/formplugins/smartwizard/smartwizard.js' %}"></script>
+<script src="{% static 'js/formplugins/select2/select2.bundle.js' %}"></script>
+<script src="{% static 'js/notifications/toastr/toastr.js' %}"></script>
+<script src="{% static 'js/dependency/moment/moment.js' %}"></script>
+<script src="{% static 'js/dependency/locale/pt-br.js' %}"></script>
+<script src="{% static 'js/formplugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/siga/movimentacoes/agendamentos/agendamento.js' %}"></script>
+{% endblock javascript %}

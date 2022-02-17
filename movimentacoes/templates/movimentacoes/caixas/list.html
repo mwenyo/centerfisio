@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+
+
+{% block css %}
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/datagrid/datatables/datatables.bundle.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/notifications/toastr/toastr.css' %}">
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+<li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_financeiro %}
+
+<li class="active open">
+
+{% endblock nav_financeiro %}
+
+
+{% block nav_financeiro_caixa_historico %}
+
+<li class="active">
+
+{% endblock nav_financeiro_caixa_historico %}
+
+
+{% block breadcrumb-item %}
+
+<li class="breadcrumb-item activate">Financeiro</li>
+<li class="breadcrumb-item activate">Caixas</li>
+<li class="breadcrumb-item activate">Histórico</li>
+
+{% endblock breadcrumb-item %}
+    
+
+{% block subheader_title %}
+
+    <i class='subheader-icon fal fa-chart-bar'></i> Caixas
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+    Histórico de Movimentações dos Caixas
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+    
+
+{% endblock subheader_block %}
+    
+    
+{% block content %}
+
+{% if not caixa_aberto and perms.movimentacoes.add_caixa %}
+    
+<div class="row">
+    <div class="col-xl-12">
+        <a href="javascript:void(0)" data-url="{% url 'movimentacoes:caixa_abrir' %}" class="btn btn-success font-weight-bold fs-xl" id="caixa_abrir">
+            <i class="fas fa-plus"></i>
+            <span class="hidden-md-down"> Abrir Caixa</span>
+        </a>
+    </div>
+</div>
+
+{% endif %}
+<div class="row">&nbsp;</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Histórico de Caixas
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Situação</th>
+                                <th>Data</th>
+                                <th>Abertura</th>
+                                <th>Fechamento</th>
+                                <th>Saldo Inicial</th>
+                                <th>Saldo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if object_list %} 
+                                {% for caixa in object_list %}
+                                    <tr>
+                                        <td class="text-center">
+                                            
+                                            {% if caixa.status %}
+                                                <span class="badge badge-success">Aberto</span>
+                                            {% else %}
+                                                <span class="badge badge-warning">Fechado</span>
+                                            {% endif %}
+                                                
+                                        </td>
+                                        <td class="text-center" data-sort="{{ caixa.data|date:'d/m/Y' }}" >{{ caixa.data }}</td>
+                                        <td class="text-center">
+                                            {{ caixa.abertura }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ caixa.fechamento|default_if_none:"---" }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ caixa.saldo_inicial|default_if_none:"0,00" }}
+                                        </td>
+                                        </td>
+                                        <td class="text-center">
+                                            {{ caixa.saldo|default_if_none:"0,00" }}
+                                        </td>
+                                        
+                                        <td>
+                                            <div class="text-center">
+                                                <a href="{% url 'movimentacoes:caixa_detail' caixa.id %}" class="btn btn-sm btn-success mr-2 edit_fpgto" title="Detalhes">
+                                                    <i class="fas fa-eye "></i> 
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="form_del_fpgto" method="post">
+    {% csrf_token %}
+</form>
+{% endblock content %}
+
+
+{% block javascript %}
+    <script src="{% static 'js/datagrid/datatables/datatables.bundle.js' %}"></script>
+    <script src="{% static 'js/datagrid/datatables/alt-string.js' %}"></script>
+    <script src="{% static 'js/notifications/toastr/toastr.js' %}"></script>
+    <script src="{% static 'js/siga/movimentacoes/caixas/caixa_list.js' %}"></script>
+
+    <script>
+        
+    </script>
+{% endblock javascript %}
+    
