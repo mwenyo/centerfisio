@@ -1,17 +1,18 @@
-"""Registro Admin Pacientes"""
 from django.contrib import admin
+from .models import Paciente
 
-from .models import Paciente, Contato
 
-class ContatoInline(admin.TabularInline):
-    '''Tabular Inline View for Contato'''
-
-    model = Contato
+# Register your models here.
 
 @admin.register(Paciente)
 class PacienteAdmin(admin.ModelAdmin):
-    '''Admin View for Paciente'''
-
-    inlines = [
-        ContatoInline,
-    ]
+    """
+        Admin View for Paciente
+    """
+    list_display = ('nome',
+                    'data_nascimento',
+                    'cidade',
+                    'profissao',
+                    'telefone',)
+    list_filter = ('nome',)
+    search_fields = ('nome',)

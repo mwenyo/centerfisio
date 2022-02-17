@@ -1,0 +1,17 @@
+{% for promocao in promocoes %}
+    <optgroup label="{{ promocao.descricao }}">
+        {% for pp in procedimentos_promocoes %}
+            {% if pp.promocao.id == promocao.id %}
+                <option value="{{ pp.id }}" data-valor="{{ pp.valor_promocional }}">
+                    
+                    {% if pp.procedimento.tipo_atendimento == 0 %}
+                        Estética
+                    {% else %}
+                        Fisioterapia
+                    {% endif %}
+                        : {{ pp.procedimento.nome }} - R$ {{ pp.valor_promocional }}
+                </option>
+            {% endif %}
+        {% endfor %}
+    </optgroup>
+{% endfor %}

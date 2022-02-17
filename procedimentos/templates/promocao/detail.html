@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load filters %}
+
+
+{% block css %}
+
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/datagrid/datatables/datatables.bundle.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/notifications/toastr/toastr.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/formplugins/select2/select2.bundle.css' %}">
+
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+<li>
+
+    {% endblock nav_inicio %}
+
+
+    {% block nav_promocoes %}
+
+<li class="active">
+
+    {% endblock nav_promocoes %}
+
+
+    {% block breadcrumb-item %}
+
+<li class="breadcrumb-item activate">Estética</li>
+<li class="breadcrumb-item activate">Promoções</li>
+<li class="breadcrumb-item activate">Informações</li>
+
+{% endblock breadcrumb-item %}
+
+
+{% block subheader_title %}
+
+<i class='subheader-icon fal fa-badge-percent'></i> {{ object.descricao }}
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+Promoção entre os dias <strong>{{ object.inicio|naturalday }}</strong> até <strong>{{ object.termino|naturalday }}</strong>
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+
+
+{% endblock subheader_block %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <a href="javascript:void(0)" id="cadastrar_procedimento" data-id="{{ object.id }}" data-url="{% url 'procedimentos:procedimento_ajax_list' object.id %}" class="btn btn-success font-weight-bold fs-xl">
+        <i class="fas fa-plus"></i><i class="fas fa-diagnoses"></i>
+           <span class="hidden-md-down ml-1"> Adicionar Procedimento</span>
+        </a>
+    </div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Lista de Procedimentos em Promoção
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th>Valor Original</th>
+                                <th>Valor Promocional</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pep  in object.procedimentopromocao_set.all %}
+                            <tr>
+                                <td>{{ pep.procedimento.nome }}</td>
+                                <td>{{ pep.procedimento.descricao }}</td>
+                                <td class="text-center">
+                                    {{ pep.procedimento.valor }}
+                                </td>
+                                <td class="text-center">
+                                    {{ pep.valor_promocional }}
+                                </td>
+                                <td>
+                                    <div class="text-center">
+                                        <a href="javascript:void(0);" id="edit_{{ procedimento.id }}"
+                                            class="btn btn-sm btn-primary mr-2 edit_procedimento" title="Editar"
+                                            data-nome="{{ pep.procedimento.nome }}"
+                                            data-id="{{ pep.id }}"
+                                            data-url="{% url 'procedimentos:procedimento_promocao_edit' pep.id %}">
+                                            <i class="fas fa-edit "></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="btn btn-sm btn-danger mr-2" title="Excluir" id="del_procedimento" data-id="{{ pep.id }}" data-nome="{{ pep.procedimento.nome }}" data-url="{% url 'procedimentos:procedimento_promocao_delete' pep.id %}">
+                                            <i class="fas fa-times "></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="excluir" action="{% url 'procedimentos:promocao_delete' object.id %}" method="POST">{% csrf_token %}</form>
+{% endblock content %}
+
+
+{% block javascript %}
+
+<script src="{% static 'js/datagrid/datatables/datatables.bundle.js' %}"></script>
+<script src="{% static 'js/datagrid/datatables/alt-string.js' %}"></script>
+<script src="{% static 'js/notifications/toastr/toastr.js' %}"></script>
+<script src="{% static 'js/formplugins/select2/select2.bundle.js' %}"></script>
+<script src="{% static 'js/siga/procedimentos/procedimento_em_promocao/procedimento_em_promocao.js' %}"></script>
+
+{% endblock javascript %}

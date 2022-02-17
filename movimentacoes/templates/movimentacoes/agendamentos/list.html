@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+
+
+{% block css %}
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/datagrid/datatables/datatables.bundle.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/notifications/toastr/toastr.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/formplugins/select2/select2.bundle.css' %}">
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+    <li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_agendamentos %}
+
+    <li class="active open"> 
+
+{% endblock nav_agendamentos %}
+
+{% block nav_agendamentos_listar %}
+
+<li class="active">
+
+{% endblock nav_agendamentos_listar %}
+
+
+{% block breadcrumb-item %}
+
+    <li class="breadcrumb-item activate">Agendamentos</li>
+
+{% endblock breadcrumb-item %}
+    
+
+{% block subheader_title %}
+
+    <i class='subheader-icon fal fa-badge-percent'></i> Agendamentos
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+    Agendamentos de estética que a clínica realiza
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+    
+
+{% endblock subheader_block %}
+    
+    
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12">
+        <a href="{% url 'movimentacoes:agendamento_create' %}" class="btn btn-success" id="cadastrar_agendamento">
+            <i class="fas fa-plus"></i>
+            <span class="hidden-md-down"> Adicionar Agendamento</span>
+        </a>
+    </div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Lista de Agendamentos
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table id="dt-basic-example" class="table table-hover table-bordered m-0 w-100">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Dia</th>
+                                <th>Horário</th>
+                                <th>Paciente</th>
+                                <th>Profissional</th>
+                                <th>Situação</th>
+                                <th class="none">Procedimentos</th>
+                                <th class="none">Observações</th>
+                                <th class="none">Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if object_list %}
+                                {% for agendamento in object_list %}
+                                    <tr>
+                                        <td class="text-center">
+                                            {{ agendamento.data|date:'SHORT_DATE_FORMAT' }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ agendamento.horario }}
+                                        </td>
+                                        <td>
+                                            {{ agendamento.paciente.nome }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ agendamento.profissional.user.first_name }}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if agendamento.status == agendamento.SituacaoDoAgendamento.ACONFIRMAR %}
+                                            <span class="badge border border-secondary text-secondary">{{ agendamento.SituacaoDoAgendamento.ACONFIRMAR.label }}</span>
+                                        
+                                            {% elif agendamento.status == agendamento.SituacaoDoAgendamento.CONFIRMADO %}
+                                            <span class="badge border border-info text-info">{{ agendamento.SituacaoDoAgendamento.CONFIRMADO.label }}</span>
+                                        
+                                            {% elif agendamento.status == agendamento.SituacaoDoAgendamento.EMESPERA %}
+                                            <span class="badge border border-warning text-black">{{ agendamento.SituacaoDoAgendamento.EMESPERA.label }}</span>
+                                        
+                                            {% elif agendamento.status == agendamento.SituacaoDoAgendamento.EMATENDIMENTO %}
+                                            <span
+                                                class="badge border border-success text-success">{{ agendamento.SituacaoDoAgendamento.EMATENDIMENTO.label }}</span>
+                                        
+                                            {% elif agendamento.status == agendamento.SituacaoDoAgendamento.ENCERRADO %}
+                                            <span class="badge border border-danger text-danger">{{ agendamento.SituacaoDoAgendamento.ENCERRADO.label }}</span>
+                                        
+                                            {% endif %}
+                                        </td>
+                                        <td>{% for procedimento in agendamento.procedimentos.all %}{{ procedimento.nome }}, {% endfor %}{% for procedimento in agendamento.procedimentos_promo.all %}<span class="badge border border-danger text-danger">{{ procedimento.procedimento.nome }}</span>, {% endfor %}</td>
+                                        <td>
+                                            {{ agendamento.observacoes }}
+                                        </td>
+                                        <td class="text-center">
+                                            R$ {{ agendamento.valor }}
+                                        </td>
+                                        
+                                        <td>
+                                            <div class="text-center">
+                                                {% if agendamento.status != agendamento.SituacaoDoAgendamento.ENCERRADO and agendamento.status != agendamento.SituacaoDoAgendamento.EMATENDIMENTO %}
+                                                    <a href="javascript:void(0);" id="edit_{{ agendamento.id }}" class="btn btn-sm btn-primary mr-2 edit_agendamento" title="Editar Agendamento"data-id="{{ agendamento.id }}">
+                                                        <i class="fas fa-edit "></i>
+                                                    </a>
+                                                    <a href="javascript:void(0);" id="delete_{{ agendamento.id }}" class="btn btn-sm btn-danger mr-2 delete_agendamento" title="Excluir Agendamento"data-id="{{ agendamento.id }}">
+                                                        <i class="fas fa-times "></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% if agendamento.status == agendamento.SituacaoDoAgendamento.EMATENDIMENTO and perms.movimentacoes.change_caixa %}
+                                                    <a href="javascript:void(0);" data-id="{{ agendamento.id }}" id="pay_{{ agendamento.id }}" class="btn btn-sm btn-warning mr-2 pay_agendamento" title="Realizar Pagamento">
+                                                        <i class="fas fa-badge-dollar "></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="form_del_agendamento" method="post">
+    {% csrf_token %}
+</form>
+{% endblock content %}
+
+
+{% block javascript %}
+    <script src="{% static 'js/datagrid/datatables/datatables.bundle.js' %}"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/date-euro.js"></script>
+    <script src="{% static 'js/formplugins/inputmask/inputmask.bundle.js' %}"></script>
+    <script src="{% static 'js/formplugins/select2/select2.bundle.js' %}"></script>
+    <script src="{% static 'js/notifications/toastr/toastr.js' %}"></script>
+    <script src="{% static 'js/dependency/moment/moment.js' %}"></script>
+    <script src="{% static 'js/dependency/locale/pt-br.js' %}"></script>
+<script src="{% static 'js/formplugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/siga/movimentacoes/agendamentos/agendamento_list.js' %}"></script>
+{% endblock javascript %}
+    

@@ -1,0 +1,14 @@
+<optgroup label="Fisioterapia"></optgroup>
+    {% for procedimento in context %}
+        {% if procedimento.tipo_atendimento == 1 %}    
+            <option value="{{ procedimento.id }}" data-valor="{{ procedimento.valor }}">{{ procedimento.nome }}</option>
+        {% endif %}
+    {% endfor %}
+</optgroup>
+<optgroup label="Estética"></optgroup>
+    {% for procedimento in context %}
+        {% if procedimento.tipo_atendimento == 0 %}
+            <option value="{{ procedimento.id }}" data-valor="{{ procedimento.valor }}">{{ procedimento.nome }}</option>
+        {% endif %}
+    {% endfor %}
+</optgroup>

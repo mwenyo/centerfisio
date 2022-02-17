@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+
+
+{% block css %}
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/datagrid/datatables/datatables.bundle.css' %}">
+    <link rel="stylesheet" media="screen, print" href="{% static 'css/notifications/toastr/toastr.css' %}">
+{% endblock css %}
+
+
+{% block nav_inicio %}
+
+    <li>
+
+{% endblock nav_inicio %}
+
+
+{% block nav_financeiro_formas_de_pagamento %}
+
+<li class="active">
+
+{% endblock nav_financeiro_formas_de_pagamento %}
+
+
+{% block breadcrumb-item %}
+
+<li class="breadcrumb-item activate">Financeiro</li>
+<li class="breadcrumb-item activate">Formas de Pagamento</li>
+<li class="breadcrumb-item activate">Listagem</li>
+
+{% endblock breadcrumb-item %}
+    
+
+{% block subheader_title %}
+
+    <i class='subheader-icon fal fa-money-check-alt'></i> Formas de Pagamento
+
+{% endblock subheader_title %}
+
+{% block subheader_subtitle %}
+
+    Formas de pagamento disponíveis
+
+{% endblock subheader_subtitle %}
+
+
+{% block subheader_block %}
+    
+
+{% endblock subheader_block %}
+    
+    
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12">
+        <a href="javascript:void(0)" data-url="{% url 'movimentacoes:forma_de_pagamento_create' %}" class="btn btn-success" id="cadastrar_forma_de_pagamento">
+            <i class="fas fa-plus"></i>
+            <span class="hidden-md-down"> Cadastrar Forma de Pagamento</span>
+        </a>
+    </div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Formas de Pagamento
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Taxa Adicional</th>
+                                <th>Desconto</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if object_list %}
+                                {% for forma_de_pagamento in object_list %}
+                                    <tr>
+                                        <td>{{ forma_de_pagamento.nome }}</td>
+                                        <td class="text-center">{{ forma_de_pagamento.acrescimo }}%</td>
+                                        <td class="text-center">
+                                            {{ forma_de_pagamento.desconto }}%
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <a href="javascript:void(0);" id="edit_{{ forma_de_pagamento.id }}" class="btn btn-sm btn-primary mr-2 edit_fpgto" title="Detalhes" data-nome="{{ forma_de_pagamento.nome }}" data-acrescimo="{{ forma_de_pagamento.acrescimo|troca_virgula_ponto }}" data-desconto="{{ forma_de_pagamento.desconto|troca_virgula_ponto }}" data-id="{{ forma_de_pagamento.id }}" data-url="{% url 'movimentacoes:forma_de_pagamento_edit' forma_de_pagamento.id %}">
+                                                    <i class="fas fa-edit "></i> 
+                                                </a>
+                                                <a href="javascript:void(0);{# url 'movimentacoes:forma_de_pagamento_detail' forma_de_pagamento.id #}" class="btn btn-sm btn-danger mr-2" title="Detalhes" id="del_fpgto" data-id="{{ forma_de_pagamento.id }}" data-delete-url="{% url 'movimentacoes:forma_de_pagamento_delete' forma_de_pagamento.id %}" data-nome="{{ forma_de_pagamento.nome }}">
+                                                    <i class="fas fa-times "></i> 
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="form_del_fpgto" method="post">
+    {% csrf_token %}
+</form>
+{% endblock content %}
+
+
+{% block javascript %}
+    <script src="{% static 'js/datagrid/datatables/datatables.bundle.js' %}"></script>
+    <script src="{% static 'js/datagrid/datatables/alt-string.js' %}"></script>
+    <script src="{% static 'js/notifications/toastr/toastr.js' %}"></script>
+    <script src="{% static 'js/siga/movimentacoes/forma_de_pagamento.js' %}"></script>
+
+    <script>
+        
+    </script>
+{% endblock javascript %}
+    

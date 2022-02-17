@@ -5,17 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Django",
+            "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/manage.py",
+            "program": "${workspaceFolder}\\manage.py",
             "args": [
                 "runserver",
-                "centerfisio:80",
-                "--noreload",
-                "--nothreading"
+                // "192.168.18.19:80", // 19
+                // "192.168.18.27:80", // 27
+                // "192.168.18.84:80", // 84
+                // "192.168.18.91:80", // 91
+                "192.168.18.6:80", // Quando estiver em casa
+                "--noreload"
             ],
             "django": true
-        },
+        }
     ]
 }
